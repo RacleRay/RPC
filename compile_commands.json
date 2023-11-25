@@ -1,0 +1,26 @@
+[
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/test_log.cpp.o -c /home/racle/cppProject/RPC/test/test_log.cpp",
+  "file": "/home/racle/cppProject/RPC/test/test_log.cpp",
+  "output": "test/CMakeFiles/test_log.dir/test_log.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/config.cpp.o -c /home/racle/cppProject/RPC/src/config.cpp",
+  "file": "/home/racle/cppProject/RPC/src/config.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/config.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/log.cpp.o -c /home/racle/cppProject/RPC/src/log.cpp",
+  "file": "/home/racle/cppProject/RPC/src/log.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/log.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/utils.cpp.o -c /home/racle/cppProject/RPC/src/utils.cpp",
+  "file": "/home/racle/cppProject/RPC/src/utils.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/utils.cpp.o"
+}
+]

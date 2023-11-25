@@ -38,8 +38,17 @@ message(STATUS "[INFO] Found ${header_dir_list_count} header directories.")
 # include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${header_dir_list})
 
+
+# 设置要遍历的文件夹路径
+set(src "./src")
+
+# 使用 file(GLOB ...) 遍历文件夹并保存文件列表
+file(GLOB_RECURSE SRC_LIST "${src}/*")
+
 add_subdirectory(./src)
 
 add_subdirectory(./test)
 
 add_subdirectory(./example)
+
+include_directories(./tinyxml/tinyxml)
