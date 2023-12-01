@@ -1,25 +1,97 @@
 [
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
-  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/test_log.cpp.o -c /home/racle/cppProject/RPC/test/test_log.cpp",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/test_eventloop.cpp.o -c /home/racle/cppProject/RPC/test/test_eventloop.cpp",
+  "file": "/home/racle/cppProject/RPC/test/test_eventloop.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/test_eventloop.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/config.cpp.o -c /home/racle/cppProject/RPC/src/config.cpp",
+  "file": "/home/racle/cppProject/RPC/src/config.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/config.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/log.cpp.o -c /home/racle/cppProject/RPC/src/log.cpp",
+  "file": "/home/racle/cppProject/RPC/src/log.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/log.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/reactor/eventloop.cpp.o -c /home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/reactor/eventloop.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/reactor/fdevent.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/reactor/fdevent.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/timer/timer.cpp.o -c /home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/timer/timer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/timer/timer_event.cpp.o -c /home/racle/cppProject/RPC/src/timer/timer_event.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timer_event.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/timer/timer_event.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/utils.cpp.o -c /home/racle/cppProject/RPC/src/utils.cpp",
+  "file": "/home/racle/cppProject/RPC/src/utils.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/utils.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/test_log.cpp.o -c /home/racle/cppProject/RPC/test/test_log.cpp",
   "file": "/home/racle/cppProject/RPC/test/test_log.cpp",
   "output": "test/CMakeFiles/test_log.dir/test_log.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
-  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/config.cpp.o -c /home/racle/cppProject/RPC/src/config.cpp",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/config.cpp.o -c /home/racle/cppProject/RPC/src/config.cpp",
   "file": "/home/racle/cppProject/RPC/src/config.cpp",
   "output": "test/CMakeFiles/test_log.dir/__/src/config.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
-  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/log.cpp.o -c /home/racle/cppProject/RPC/src/log.cpp",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/log.cpp.o -c /home/racle/cppProject/RPC/src/log.cpp",
   "file": "/home/racle/cppProject/RPC/src/log.cpp",
   "output": "test/CMakeFiles/test_log.dir/__/src/log.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
-  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/utils.cpp.o -c /home/racle/cppProject/RPC/src/utils.cpp",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/reactor/eventloop.cpp.o -c /home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/reactor/eventloop.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/reactor/fdevent.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/reactor/fdevent.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/timer/timer.cpp.o -c /home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/timer/timer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/timer/timer_event.cpp.o -c /home/racle/cppProject/RPC/src/timer/timer_event.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timer_event.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/timer/timer_event.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/utils.cpp.o -c /home/racle/cppProject/RPC/src/utils.cpp",
   "file": "/home/racle/cppProject/RPC/src/utils.cpp",
   "output": "test/CMakeFiles/test_log.dir/__/src/utils.cpp.o"
 }

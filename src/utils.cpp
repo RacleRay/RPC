@@ -1,4 +1,5 @@
 #include <sys/syscall.h>
+#include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
 
@@ -22,4 +23,12 @@ pid_t get_thread_id() {
     if (g_thread_id != 0) { return g_thread_id; }
     return syscall(SYS_gettid);
 }
+
+// return 'ms' time
+int64_t get_now_time() {
+    timeval val;
+    gettimeofday(&val, nullptr);
+    return val.tv_sec * 1000 + val.tv_usec / 1000;
+}
+
 } // namespace rayrpc::details

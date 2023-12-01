@@ -43,7 +43,7 @@ include_directories(${header_dir_list})
 set(src "./src")
 
 # 使用 file(GLOB ...) 遍历文件夹并保存文件列表
-file(GLOB_RECURSE SRC_LIST "${src}/*")
+file(GLOB_RECURSE SRC_LIST "${src}/*.cpp")
 
 add_subdirectory(./src)
 

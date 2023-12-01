@@ -45,4 +45,4 @@ class Mutex {
     pthread_mutex_t m_mutex;
 };
 
-} // namespace rayrpc
+} // namespace rayrpc::details

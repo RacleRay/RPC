@@ -32,7 +32,7 @@ namespace rayrpc {
         rayrpc::Logger::getGlobalLogger()->log();                            \
     }
 
-#define ERRORLOG(str, ...)                                                    \
+#define ERRLOG(str, ...)                                                    \
     if (rayrpc::Logger::getGlobalLogger()->getLogLevel()                      \
         <= rayrpc::LogLevel::Error) {                                         \
         rayrpc::Logger::getGlobalLogger()->pushLog(                           \
