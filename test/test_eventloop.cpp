@@ -52,7 +52,7 @@ int main() {
         memset(&peer_addr, 0, addr_len);
 
         int clientfd = accept(listenfd, (sockaddr*)&peer_addr, &addr_len);
-        DEBUGLOG("success get client fd[%d], peer addr: [%s:%d]", clientfd, inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port));
+        DEBUGLOG("test_eventloop: success get client fd[%d], peer addr: [%s:%d]", clientfd, inet_ntoa(peer_addr.sin_addr), ntohs(peer_addr.sin_port));
     });
     event_loop->addEpollEvent(&event);
 
@@ -60,7 +60,7 @@ int main() {
     int i = 0;
     rayrpc::TimerEvent::s_ptr timer_event = std::make_shared<rayrpc::TimerEvent>(
         1000, true, [&i]() {
-            INFOLOG("trigger timer event, count: [%d]", i++);
+            INFOLOG("test_eventloop: trigger timer event, count: [%d]", i++);
         }
     );
     event_loop->addTimerEvent(timer_event);

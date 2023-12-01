@@ -14,7 +14,7 @@ TimerEvent::TimerEvent(int64_t interval, bool is_repeated, std::function<void()>
 
 void TimerEvent::resetAlertTime() {
     m_alert_time = details::get_now_time() + m_interval;
-    DEBUGLOG("success create timer event, will excute at [%lld]", m_alert_time);
+    DEBUGLOG("TimerEvent::resetAlertTime: success create timer event, will excute at [%lld]", m_alert_time);
 }
 
 }  // namespace rayrpc

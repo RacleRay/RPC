@@ -38,7 +38,7 @@ void WakeUpFdEvent::wakeup() {
     if (ret != 8) {
         ERRLOG("write to wakeup fd less than 8 bytes, fd[%d]", m_fd);
     }
-    DEBUGLOG("success read 8 bytes");
+    DEBUGLOG("WakeUpFdEvent::wakeup: success read 8 bytes");
 }
 
 }  // namespace rayrpc

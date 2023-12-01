@@ -9,7 +9,7 @@ namespace {
 
 int g_pid = 0;
 
-thread_local int g_thread_id = 0;
+thread_local int t_thread_id = 0;
 
 } // namespace
 
@@ -20,7 +20,7 @@ pid_t get_pid() {
 }
 
 pid_t get_thread_id() {
-    if (g_thread_id != 0) { return g_thread_id; }
+    if (t_thread_id != 0) { return t_thread_id; }
     return syscall(SYS_gettid);
 }
 

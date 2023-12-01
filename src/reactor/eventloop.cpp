@@ -21,13 +21,13 @@ inline void add_to_epoll(std::set<int> &listen_fds, rayrpc::FdEvent *event, int 
     if (it != listen_fds.end()) { op = EPOLL_CTL_MOD; }
 
     epoll_event tmp = event->getEpollEvent();
-    INFOLOG("add epoll_event.events = %d", (int)tmp.events);
+    INFOLOG("EventLoop::addEpollEvent: add epoll_event.events = %d", (int)tmp.events);
 
     int ret = epoll_ctl(epoll_fd, op, event->getFd(), &tmp);
-    if (ret < 0) { ERRLOG("failed epoll_ctl when add fd, errno=%d, error=%s", errno, strerror(errno)); }
+    if (ret < 0) { ERRLOG("EventLoop::addEpollEvent: failed epoll_ctl when add fd, errno=%d, error=%s", errno, strerror(errno)); }
 
     listen_fds.insert(event->getFd());
-    DEBUGLOG("add event success, fd[%d]", event->getFd());
+    DEBUGLOG("EventLoop::addEpollEvent: add event success, fd[%d]", event->getFd());
 }
 
 
@@ -38,11 +38,10 @@ inline void remove_from_epoll(std::set<int> &listen_fds, rayrpc::FdEvent *event,
     int op = EPOLL_CTL_DEL;
     epoll_event tmp = event->getEpollEvent();
     int ret = epoll_ctl(epoll_fd, op, event->getFd(), &tmp);
-    if (ret < 0) { ERRLOG("failed epoll_ctl when add fd, errno=%d, error=%s", errno, strerror(errno)); }
+    if (ret < 0) { ERRLOG("EventLoop::deleteEpollEvent: failed epoll_ctl when add fd, errno=%d, error=%s", errno, strerror(errno)); }
 
-    DEBUGLOG("delete event success, fd[%d]", event->getFd());
+    DEBUGLOG("EventLoop::deleteEpollEvent: delete event success, fd[%d]", event->getFd());
 }
-
 
 } // namespace
 
@@ -50,14 +49,14 @@ namespace rayrpc {
 
 EventLoop::EventLoop() : m_thread_id(details::get_thread_id()) {
     if (t_loop != nullptr) {
-        ERRLOG("failed to create event loop, this thread has created event loop");
+        ERRLOG("EventLoop::EventLoop: failed to create event loop, this thread has created event loop");
         std::abort();
     }
 
     // epoll of current eventloop
     m_epoll_fd = epoll_create(10);
     if (m_epoll_fd == -1) {
-        ERRLOG("failed to create event loop, epoll_create error, error info[%d]", errno);
+        ERRLOG("EventLoop::EventLoop: failed to create event loop, epoll_create error, error info[%d]", errno);
         std::abort();
     }
 
@@ -67,7 +66,7 @@ EventLoop::EventLoop() : m_thread_id(details::get_thread_id()) {
 
     // thread local eventloop
     t_loop = this;
-    INFOLOG("succ create event loop in thread %d", m_thread_id);
+    INFOLOG("EventLoop::EventLoop: successfully create event loop in thread [%d]", m_thread_id);
 }
 
 EventLoop::~EventLoop() {
@@ -86,10 +85,10 @@ EventLoop::~EventLoop() {
 void EventLoop::initWakeUpFdEevent() {
     m_wakeup_fd = eventfd(0, EFD_NONBLOCK | EFD_CLOEXEC);
     if (m_wakeup_fd < 0) {
-        ERRLOG("failed to create event loop, eventfd create error, error info[%d]", errno);
+        ERRLOG("EventLoop::initWakeUpFdEevent: failed to create event loop, eventfd create error, error info [%d]", errno);
         std::abort();
     }
-    INFOLOG("wakeup fd = %d", m_wakeup_fd);
+    INFOLOG("EventLoop::initWakeUpFdEevent: wakeup fd = %d", m_wakeup_fd);
 
     // init wakeup fd and its read event callback
     m_wakeup_fd_event = new WakeUpFdEvent(m_wakeup_fd);
@@ -98,7 +97,7 @@ void EventLoop::initWakeUpFdEevent() {
         while (read(m_wakeup_fd, &val, sizeof(val)) > 0 && errno != EAGAIN) {
             // wait for read complele.
         }
-        DEBUGLOG("read full bytes from wakeup fd[%d]", m_wakeup_fd);
+        DEBUGLOG("EventLoop::initWakeUpFdEevent: read full bytes from wakeup fd [%d]", m_wakeup_fd);
     });
 
     addEpollEvent(m_wakeup_fd_event);
@@ -106,7 +105,7 @@ void EventLoop::initWakeUpFdEevent() {
 
 
 void EventLoop::wakeup() {
-    INFOLOG("wakeup event loop in thread %d", m_thread_id);
+    INFOLOG("EventLoop::wakeup: wakeup event loop in thread [%d]", m_thread_id);
     m_wakeup_fd_event->wakeup();
 }
 
@@ -184,10 +183,10 @@ void EventLoop::loop() {
         epoll_event result_event[g_epoll_max_events];
 
         int ret = epoll_wait(m_epoll_fd, result_event, g_epoll_max_events, timeout);
-        DEBUGLOG("return from epoll_wait, rt = %d", ret);
+        DEBUGLOG("EventLoop::loop: return from epoll_wait, ret = [%d]", ret);
 
         if (ret < 0) {
-            ERRLOG("epoll_wait error, error info[%d]", errno);
+            ERRLOG("EventLoop::loop: epoll_wait error, error info [%d]", errno);
             continue;
         }
 
@@ -195,22 +194,21 @@ void EventLoop::loop() {
             epoll_event trigger_event = result_event[i];
             auto *fdevent = static_cast<FdEvent *>(trigger_event.data.ptr);
             if (!fdevent) {
-                ERRLOG("fdevent is nullptr");
+                ERRLOG("EventLoop::loop: fdevent is nullptr");
                 continue;
             }
 
             // add corresponding tasks to current loops pending task queue.
             if (trigger_event.events & EPOLLIN) {
-                DEBUGLOG("fd %d trigger EPOLLIN event", fdevent->getFd())
+                DEBUGLOG("EventLoop::loop: fd [%d] trigger EPOLLIN event", fdevent->getFd())
                 addTask(fdevent->handler(FdEvent::TriggerEvent::IN_EVENT));
             }
             if (trigger_event.events & EPOLLOUT) {
-                DEBUGLOG("fd %d trigger EPOLLOUT event", fdevent->getFd())
+                DEBUGLOG("EventLoop::loop: fd [%d] trigger EPOLLOUT event", fdevent->getFd())
                 addTask(fdevent->handler(FdEvent::TriggerEvent::OUT_EVENT));
             }
         }
     }
 }
-
 
 } // namespace rayrpc
