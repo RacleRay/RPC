@@ -42,7 +42,7 @@ TcpAcceptor::TcpAcceptor(NetAddr::s_ptr local_addr) : m_local_addr(local_addr) {
 }
 
 
-int TcpAcceptor::accept() {
+std::pair<int, NetAddr::s_ptr> TcpAcceptor::accept() {
     if (m_family == AF_INET) {
         sockaddr_in client_addr;
         memset(&client_addr, 0, sizeof(client_addr));
@@ -52,14 +52,15 @@ int TcpAcceptor::accept() {
         if (client_fd < 0) { 
             ERRLOG("TcpAcceptor::accept : accept error, errno=%d, error=%s", errno, strerror(errno)); }
 
-        IPNetAddr peer_addr(client_addr);
-        INFOLOG("TcpAcceptor::accept : A client have accpeted succ, peer addr [%s]", peer_addr.toString().c_str());
+        // IPNetAddr peer_addr(client_addr);
+        IPNetAddr::s_ptr peer_addr = std::make_shared<IPNetAddr>(client_addr);
+        INFOLOG("TcpAcceptor::accept : A client have accpeted succ, peer addr [%s]", peer_addr->toString().c_str());
         
-        return client_fd;
+        return {client_fd, peer_addr};
     } else {
         // other protocal
         // TODO: not implemented
-        return -1;
+        return {-1, nullptr};
     }
 }
 

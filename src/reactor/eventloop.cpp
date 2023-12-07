@@ -37,9 +37,10 @@ inline void remove_from_epoll(std::set<int> &listen_fds, rayrpc::FdEvent *event,
 
     int op = EPOLL_CTL_DEL;
     epoll_event tmp = event->getEpollEvent();
-    int ret = epoll_ctl(epoll_fd, op, event->getFd(), &tmp);
+    int ret = epoll_ctl(epoll_fd, op, event->getFd(), nullptr);
     if (ret < 0) { ERRLOG("EventLoop::deleteEpollEvent: failed epoll_ctl when add fd, errno=%d, error=%s", errno, strerror(errno)); }
 
+    listen_fds.erase(event->getFd());  // remove from epoll listen fdss
     DEBUGLOG("EventLoop::deleteEpollEvent: delete event success, fd[%d]", event->getFd());
 }
 
@@ -186,7 +187,7 @@ void EventLoop::loop() {
         DEBUGLOG("EventLoop::loop: return from epoll_wait, ret = [%d]", ret);
 
         if (ret < 0) {
-            ERRLOG("EventLoop::loop: epoll_wait error, error info [%d]", errno);
+            ERRLOG("EventLoop::loop: epoll_wait error, errno [%d], error info [%s]", errno, strerror(errno));
             continue;
         }
 

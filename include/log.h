@@ -16,7 +16,7 @@ namespace rayrpc {
     if (rayrpc::Logger::getGlobalLogger()->getLogLevel()                      \
         <= rayrpc::LogLevel::Debug) {                                         \
         rayrpc::Logger::getGlobalLogger()->pushLog(                           \
-            (new rayrpc::LogEvent(rayrpc::LogLevel::Debug))->toString() + "[" \
+            (rayrpc::LogEvent(rayrpc::LogLevel::Debug)).toString() + "[" \
             + std::string(__FILE__) + ":" + std::to_string(__LINE__) + "]\t"  \
             + rayrpc::formatString(str, ##__VA_ARGS__) + "\n");               \
         rayrpc::Logger::getGlobalLogger()->log();                             \
@@ -26,7 +26,7 @@ namespace rayrpc {
     if (rayrpc::Logger::getGlobalLogger()->getLogLevel()                     \
         <= rayrpc::LogLevel::Info) {                                         \
         rayrpc::Logger::getGlobalLogger()->pushLog(                          \
-            (new rayrpc::LogEvent(rayrpc::LogLevel::Info))->toString() + "[" \
+            (rayrpc::LogEvent(rayrpc::LogLevel::Info)).toString() + "[" \
             + std::string(__FILE__) + ":" + std::to_string(__LINE__) + "]\t" \
             + rayrpc::formatString(str, ##__VA_ARGS__) + "\n");              \
         rayrpc::Logger::getGlobalLogger()->log();                            \
@@ -36,7 +36,7 @@ namespace rayrpc {
     if (rayrpc::Logger::getGlobalLogger()->getLogLevel()                      \
         <= rayrpc::LogLevel::Error) {                                         \
         rayrpc::Logger::getGlobalLogger()->pushLog(                           \
-            (new rayrpc::LogEvent(rayrpc::LogLevel::Error))->toString() + "[" \
+            (rayrpc::LogEvent(rayrpc::LogLevel::Error)).toString() + "[" \
             + std::string(__FILE__) + ":" + std::to_string(__LINE__) + "]\t"  \
             + rayrpc::formatString(str, ##__VA_ARGS__) + "\n");               \
         rayrpc::Logger::getGlobalLogger()->log();                             \

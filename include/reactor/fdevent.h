@@ -27,6 +27,10 @@ class FdEvent {
     // register specific event and its callback
     void listen(TriggerEvent event_type, const std::function<void()>& callback);
 
+    void setNonBlock();
+
+    void cancel(TriggerEvent event_type);
+
   protected:
     int m_fd{-1};
 

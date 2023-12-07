@@ -11,6 +11,10 @@ TcpBuffer::TcpBuffer(int size) : m_size(size) {
     m_buffer.resize(size);
 }
 
+size_t TcpBuffer::getBufferSize() const noexcept {
+    return m_buffer.size();
+}
+
 size_t TcpBuffer::readAble() const noexcept {
     return m_write_index - m_read_index;
 }
@@ -33,6 +37,7 @@ void TcpBuffer::writeToBuffer(const char* data, size_t len) {
         resizeBuffer(new_size);
     }
     memcpy(&m_buffer[m_write_index], data, len);
+    m_write_index += len;
 }
 
 void TcpBuffer::readFromBuffer(std::vector<char>& out, size_t len) {

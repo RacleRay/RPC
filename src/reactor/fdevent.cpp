@@ -1,5 +1,5 @@
 #include <cstring>
-
+#include <fcntl.h>
 #include <unistd.h>
 
 #include "reactor/fdevent.h"
@@ -29,6 +29,23 @@ void FdEvent::listen(TriggerEvent event_type, const std::function<void()>& callb
     m_listen_events.data.ptr = this;
 }
 
+
+void FdEvent::setNonBlock() {
+    int flag = fcntl(m_fd, F_GETFL, 0);
+    if (flag & O_NONBLOCK) {
+        return;
+    }
+    fcntl(m_fd, F_SETFL, flag | O_NONBLOCK);
+}
+
+
+void FdEvent::cancel(TriggerEvent event_type) {
+    if (event_type == TriggerEvent::IN_EVENT) {
+        m_listen_events.events &= ~EPOLLIN;
+    } else {
+        m_listen_events.events &= ~EPOLLOUT;
+    }
+}
 
 // ============================================================================
 // WakeUpFdEvent

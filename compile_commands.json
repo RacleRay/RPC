@@ -1,6 +1,102 @@
 [
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/test_client.cpp.o -c /home/racle/cppProject/RPC/test/test_client.cpp",
+  "file": "/home/racle/cppProject/RPC/test/test_client.cpp",
+  "output": "test/CMakeFiles/test_client.dir/test_client.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/config.cpp.o -c /home/racle/cppProject/RPC/src/config.cpp",
+  "file": "/home/racle/cppProject/RPC/src/config.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/config.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/iothread/iothread.cpp.o -c /home/racle/cppProject/RPC/src/iothread/iothread.cpp",
+  "file": "/home/racle/cppProject/RPC/src/iothread/iothread.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/iothread/iothread.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/iothread/iothreadgroup.cpp.o -c /home/racle/cppProject/RPC/src/iothread/iothreadgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/iothread/iothreadgroup.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/iothread/iothreadgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/log.cpp.o -c /home/racle/cppProject/RPC/src/log.cpp",
+  "file": "/home/racle/cppProject/RPC/src/log.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/log.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/reactor/eventloop.cpp.o -c /home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/eventloop.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/reactor/eventloop.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/reactor/fdevent.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdevent.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/reactor/fdevent.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/tcp/netaddr.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/tcp/tcpacceptor.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpacceptor.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpacceptor.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/tcp/tcpacceptor.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/tcp/tcpserver.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/timer/timer.cpp.o -c /home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timer.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/timer/timer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/timer/timerevent.cpp.o -c /home/racle/cppProject/RPC/src/timer/timerevent.cpp",
+  "file": "/home/racle/cppProject/RPC/src/timer/timerevent.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/timer/timerevent.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_client.dir/__/src/utils.cpp.o -c /home/racle/cppProject/RPC/src/utils.cpp",
+  "file": "/home/racle/cppProject/RPC/src/utils.cpp",
+  "output": "test/CMakeFiles/test_client.dir/__/src/utils.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/test_eventloop.cpp.o -c /home/racle/cppProject/RPC/test/test_eventloop.cpp",
   "file": "/home/racle/cppProject/RPC/test/test_eventloop.cpp",
   "output": "test/CMakeFiles/test_eventloop.dir/test_eventloop.cpp.o"
@@ -43,6 +139,12 @@
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "output": "test/CMakeFiles/test_eventloop.dir/__/src/tcp/netaddr.cpp.o"
@@ -58,6 +160,18 @@
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "output": "test/CMakeFiles/test_eventloop.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_eventloop.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_eventloop.dir/__/src/tcp/tcpserver.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
@@ -121,6 +235,12 @@
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothread.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_iothread.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothread.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "output": "test/CMakeFiles/test_iothread.dir/__/src/tcp/netaddr.cpp.o"
@@ -136,6 +256,18 @@
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothread.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "output": "test/CMakeFiles/test_iothread.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothread.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_iothread.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothread.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_iothread.dir/__/src/tcp/tcpserver.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
@@ -199,6 +331,12 @@
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothreadgroup.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_iothreadgroup.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothreadgroup.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "output": "test/CMakeFiles/test_iothreadgroup.dir/__/src/tcp/netaddr.cpp.o"
@@ -214,6 +352,18 @@
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "output": "test/CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_iothreadgroup.dir/__/src/tcp/tcpserver.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
@@ -277,6 +427,12 @@
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "output": "test/CMakeFiles/test_log.dir/__/src/tcp/netaddr.cpp.o"
@@ -292,6 +448,18 @@
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "output": "test/CMakeFiles/test_log.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_log.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_log.dir/__/src/tcp/tcpserver.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
@@ -355,6 +523,12 @@
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_tcp.dir/__/src/reactor/fdeventgroup.cpp.o -c /home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "file": "/home/racle/cppProject/RPC/src/reactor/fdeventgroup.cpp",
+  "output": "test/CMakeFiles/test_tcp.dir/__/src/reactor/fdeventgroup.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_tcp.dir/__/src/tcp/netaddr.cpp.o -c /home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/netaddr.cpp",
   "output": "test/CMakeFiles/test_tcp.dir/__/src/tcp/netaddr.cpp.o"
@@ -370,6 +544,18 @@
   "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_tcp.dir/__/src/tcp/tcpbuffer.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "file": "/home/racle/cppProject/RPC/src/tcp/tcpbuffer.cpp",
   "output": "test/CMakeFiles/test_tcp.dir/__/src/tcp/tcpbuffer.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_tcp.dir/__/src/tcp/tcpconnection.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpconnection.cpp",
+  "output": "test/CMakeFiles/test_tcp.dir/__/src/tcp/tcpconnection.cpp.o"
+},
+{
+  "directory": "/home/racle/cppProject/RPC/build/test",
+  "command": "/usr/sbin/clang++ -D__MY_DEBUG__ -I/home/racle/cppProject/RPC/include -I/home/racle/cppProject/RPC/include/iothread -I/home/racle/cppProject/RPC/include/reactor -I/home/racle/cppProject/RPC/include/tcp -I/home/racle/cppProject/RPC/include/timer -I/home/racle/cppProject/RPC/tinyxml -I/home/racle/cppProject/RPC/tinyxml/tinyxml -g -std=gnu++17 -o CMakeFiles/test_tcp.dir/__/src/tcp/tcpserver.cpp.o -c /home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "file": "/home/racle/cppProject/RPC/src/tcp/tcpserver.cpp",
+  "output": "test/CMakeFiles/test_tcp.dir/__/src/tcp/tcpserver.cpp.o"
 },
 {
   "directory": "/home/racle/cppProject/RPC/build/test",
