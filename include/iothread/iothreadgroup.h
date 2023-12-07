@@ -10,7 +10,7 @@ namespace rayrpc {
 
 class IOThreadGroup {
 public:
-    explicit IOThreadGroup(int size);
+    explicit IOThreadGroup(size_t size);
     ~IOThreadGroup() = default;
 
     void start();
@@ -19,8 +19,8 @@ public:
     IOThread* getIOThread();
 
 private:
-    int m_size{0};
-    int m_thread_idx{0};
+    size_t m_size{0};
+    size_t m_thread_idx{0};
 
     std::vector<IOThread*> m_iothread_group;
 

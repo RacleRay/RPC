@@ -9,7 +9,7 @@
 
 namespace {
 
-thread_local rayrpc::EventLoop *t_loop = nullptr;
+thread_local rayrpc::EventLoop *t_current_loop = nullptr;
 
 int g_epoll_max_timeout = 10000; // ms
 int g_epoll_max_events = 10;
@@ -48,7 +48,7 @@ inline void remove_from_epoll(std::set<int> &listen_fds, rayrpc::FdEvent *event,
 namespace rayrpc {
 
 EventLoop::EventLoop() : m_thread_id(details::get_thread_id()) {
-    if (t_loop != nullptr) {
+    if (t_current_loop != nullptr) {
         ERRLOG("EventLoop::EventLoop: failed to create event loop, this thread has created event loop");
         std::abort();
     }
@@ -65,7 +65,7 @@ EventLoop::EventLoop() : m_thread_id(details::get_thread_id()) {
     initTimer();
 
     // thread local eventloop
-    t_loop = this;
+    t_current_loop = this;
     INFOLOG("EventLoop::EventLoop: successfully create event loop in thread [%d]", m_thread_id);
 }
 
@@ -209,6 +209,15 @@ void EventLoop::loop() {
             }
         }
     }
+}
+
+// static 
+EventLoop* EventLoop::GetCurrentEventLoop() {
+    if (t_current_loop) {
+        return t_current_loop;
+    }
+    t_current_loop = new EventLoop();
+    return t_current_loop;
 }
 
 } // namespace rayrpc

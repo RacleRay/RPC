@@ -3,7 +3,7 @@
 
 namespace rayrpc {
     
-IOThreadGroup::IOThreadGroup(int size) : m_size(size) {
+IOThreadGroup::IOThreadGroup(size_t size) : m_size(size) {
     m_iothread_group.resize(size);
     for (size_t i = 0; i < size; ++i) {
         m_iothread_group[i] = new IOThread();
@@ -25,7 +25,7 @@ void IOThreadGroup::join() {
 
 // round robin
 IOThread* IOThreadGroup::getIOThread() {
-    if (m_thread_idx == m_iothread_group.size() || m_thread_idx == -1) {
+    if (m_thread_idx == m_iothread_group.size()) {
         m_thread_idx = 0;
     }
     return m_iothread_group[m_thread_idx++];

@@ -9,4 +9,3 @@ foreach(v ${all_tests})
     add_executable(${target_name} ${v} ${SRC_LIST})
     target_link_libraries(${target_name} PRIVATE /usr/local/tinyxml/libtinyxml.a)
 endforeach()
-
