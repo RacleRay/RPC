@@ -1,8 +1,8 @@
 #pragma once
 
 #include <functional>
-
 #include <sys/epoll.h>
+#include <unistd.h>
 
 namespace rayrpc {
 
@@ -16,7 +16,11 @@ class FdEvent {
     FdEvent() = default;
     explicit FdEvent(int fd) : m_fd(fd) {};
 
-    ~FdEvent() = default;
+    ~FdEvent() {
+        if (m_fd > 0) {
+            close(m_fd);
+        }
+    };
 
     int getFd() const { return m_fd; }
     epoll_event getEpollEvent() { return m_listen_events; }

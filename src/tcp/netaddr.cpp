@@ -38,7 +38,7 @@ sockaddr *IPNetAddr::getSockAddr() {
     return reinterpret_cast<sockaddr *>(&m_addr);
 }
 
-socklen_t IPNetAddr::getSockLen() {
+socklen_t IPNetAddr::getSockAddrLen() {
     return sizeof(m_addr);
 }
 

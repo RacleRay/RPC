@@ -167,6 +167,8 @@ void EventLoop::addTimerEvent(TimerEvent::s_ptr timer_event) {
 
 
 void EventLoop::loop() {
+    m_is_looping = true;
+
     while (!m_stop_flag) {
         std::queue<std::function<void()>> tmp_tasks;
         {
@@ -220,5 +222,11 @@ EventLoop* EventLoop::GetCurrentEventLoop() {
     t_current_loop = new EventLoop();
     return t_current_loop;
 }
+
+
+bool EventLoop::isLooping() const noexcept {
+    return m_is_looping;
+}
+
 
 } // namespace rayrpc

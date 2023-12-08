@@ -14,7 +14,7 @@ class NetAddr {
 
     virtual sockaddr *getSockAddr() = 0;
 
-    virtual socklen_t getSockLen() = 0;
+    virtual socklen_t getSockAddrLen() = 0;
 
     virtual int getFamily() = 0;
 
@@ -34,7 +34,7 @@ class IPNetAddr : public NetAddr {
 
     sockaddr *getSockAddr() override;
 
-    socklen_t getSockLen() override;
+    socklen_t getSockAddrLen() override;
 
     int getFamily() override;
 

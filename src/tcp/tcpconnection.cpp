@@ -1,6 +1,7 @@
 #include <unistd.h>
 
 #include "log.h"
+#include "protocol/stringcoder.h"
 #include "reactor/fdevent.h"
 #include "reactor/fdeventgroup.h"
 #include "reflect_enum.h"
@@ -10,9 +11,13 @@
 namespace rayrpc {
 
 // fd : connection fd
-TcpConnection::TcpConnection(IOThread* io_thread, int fd, int buffer_size, NetAddr::s_ptr peer_addr)
-    : m_io_thread(io_thread), m_fd(fd), m_peer_addr(peer_addr), m_state(TcpState::NotConnected)
+// TcpConnection::TcpConnection(IOThread* io_thread, int fd, int buffer_size, NetAddr::s_ptr peer_addr)
+//     : m_io_thread(io_thread), m_fd(fd), m_peer_addr(peer_addr), m_state(TcpState::NotConnected)
+TcpConnection::TcpConnection(EventLoop* event_loop, int fd, int buffer_size, NetAddr::s_ptr peer_addr, TcpConnectionType type)
+    : m_event_loop(event_loop), m_fd(fd), m_peer_addr(peer_addr)
 {
+    m_state = TcpState::NotConnected;
+
     m_in_buffer = std::make_shared<TcpBuffer>(buffer_size);
     m_out_buffer = std::make_shared<TcpBuffer>(buffer_size);
 
@@ -20,14 +25,47 @@ TcpConnection::TcpConnection(IOThread* io_thread, int fd, int buffer_size, NetAd
     m_fd_event = FdEventGroup::GetFdEventGroup()->getFdEvent(fd);
     
     m_fd_event->setNonBlock();
-    m_fd_event->listen(FdEvent::TriggerEvent::IN_EVENT, [this]() { onRead(); });
     
-    io_thread->getEventLoop()->addEpollEvent(m_fd_event);
+    m_coder = new StringCoder();
+
+    if (m_connection_type == TcpConnectionType::TcpConnectionAtServer) {
+        listenReadable();
+    }
 }
 
 TcpConnection::~TcpConnection() {
     DEBUGLOG("TcpConnection::~TcpConnection");
+    if (m_fd > 0) {
+        close(m_fd);
+    }
+    if (m_coder) {
+        delete m_coder;
+        m_coder = nullptr;
+    }
 }
+
+
+void TcpConnection::listenWritable() {
+    m_fd_event->listen(FdEvent::TriggerEvent::OUT_EVENT, [this]() { onWrite(); });
+    m_event_loop->addEpollEvent(m_fd_event);
+}
+
+
+void TcpConnection::listenReadable() {
+    m_fd_event->listen(FdEvent::TriggerEvent::IN_EVENT, [this]() { onRead(); });
+    m_event_loop->addEpollEvent(m_fd_event);
+}
+
+
+void TcpConnection::pushSendMessage(AbstractProtocol::s_ptr protocol, std::function<void(AbstractProtocol::s_ptr)> callback) {
+    m_write_callbacks.emplace_back(protocol, callback);
+}
+
+
+void TcpConnection::pushRecvMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> callback) {
+    m_read_callbacks.insert(std::make_pair(req_id, std::move(callback)));
+}
+
 
 // read from connection socket to in_buffer
 void TcpConnection::onRead() {
@@ -92,6 +130,17 @@ void TcpConnection::onWrite() {
         return;
     }
 
+    if (m_connection_type == TcpConnectionAtClient) {
+        std::vector<AbstractProtocol::s_ptr> protocols;
+        protocols.reserve(m_write_callbacks.size() + 3);
+        for (auto& proto_cb_pair : m_write_callbacks) {
+            protocols.push_back(proto_cb_pair.first);
+        }
+
+        // encode to out buffer
+        m_coder->encode(protocols, m_out_buffer);
+    }
+
     bool is_write_all = false;
     while (!is_write_all) {
         if (m_out_buffer->readAble() == 0) {
@@ -118,29 +167,53 @@ void TcpConnection::onWrite() {
     if (is_write_all) {
         // 移除可写事件
         m_fd_event->cancel(FdEvent::TriggerEvent::OUT_EVENT);
-        m_io_thread->getEventLoop()->addEpollEvent(m_fd_event);
+        // m_io_thread->getEventLoop()->addEpollEvent(m_fd_event);
+        m_event_loop->addEpollEvent(m_fd_event);
+    }
+
+    // client callbacks , seperated by different protocols
+    if (m_connection_type == TcpConnectionAtClient) {
+        for (auto& proto_cb_pair : m_write_callbacks) {
+            proto_cb_pair.second(proto_cb_pair.first);  // callback
+        }
+        m_write_callbacks.clear();
     }
 }
 
 // 解析 RPC ，并执行请求，再把 RPC 处理结果发送出去
 void TcpConnection::excute() {
-    std::vector<char> tmp;
+    if (m_connection_type == TcpConnectionAtServer) {
+        std::vector<char> tmp;
 
-    size_t content_size = m_in_buffer->readAble();
-    tmp.resize(content_size);
+        size_t content_size = m_in_buffer->readAble();
+        tmp.resize(content_size);
 
-    m_in_buffer->readFromBuffer(tmp, content_size);
+        m_in_buffer->readFromBuffer(tmp, content_size);
 
-    std::string msg(tmp.begin(), tmp.end());
+        std::string msg(tmp.begin(), tmp.end());
 
-    INFOLOG("TcpConnection::excute : msg from client [%s], msg size [%d]", m_peer_addr->toString().c_str(), msg.size());
+        INFOLOG("TcpConnection::excute : msg from client [%s], msg size [%d]", m_peer_addr->toString().c_str(), msg.size());
 
-    // echo for test
-    m_out_buffer->writeToBuffer(msg.c_str(), msg.length());
+        // echo for test
+        m_out_buffer->writeToBuffer(msg.c_str(), msg.length());
 
-    // 添加可写事件
-    m_fd_event->listen(FdEvent::TriggerEvent::OUT_EVENT, [this]() { onWrite(); });
-    m_io_thread->getEventLoop()->addEpollEvent(m_fd_event);
+        listenWritable();
+    } 
+    else {
+        // decode buffer
+        std::vector<AbstractProtocol::s_ptr> proto_msg;
+        m_coder->decode(m_in_buffer, proto_msg);
+
+        // do callback
+        for (auto& msg : proto_msg) {
+            std::string req_id = msg->getReqId();
+            auto it = m_read_callbacks.find(req_id);
+            if (it != m_read_callbacks.end()) {
+                it->second(msg);
+            }
+        }
+    }
+    
 }
 
 void TcpConnection::setState(const TcpState& state) noexcept {
@@ -158,7 +231,8 @@ void TcpConnection::clear() {
     m_fd_event->cancel(FdEvent::TriggerEvent::IN_EVENT);
     m_fd_event->cancel(FdEvent::TriggerEvent::OUT_EVENT);
 
-    m_io_thread->getEventLoop()->deleteEpollEvent(m_fd_event);
+    // m_io_thread->getEventLoop()->deleteEpollEvent(m_fd_event);
+    m_event_loop->deleteEpollEvent(m_fd_event);
     m_state = TcpState::Closed;
 }
 
@@ -175,6 +249,11 @@ void TcpConnection::shutdown() {
     // shutdown 后，服务器程序不会再对这个 fd 进行写操作了，发送 FIN 报文， 触发了四次挥手的第一个阶段
     // 此后，当 fd 发生可读事件，但是可读的数据为0，即 对端也发送了 FIN
     ::shutdown(m_fd, SHUT_RDWR);
+}
+
+
+void TcpConnection::setConnectionType(TcpConnectionType type) {
+    m_connection_type = type;
 }
 
 }  // namespace rayrpc

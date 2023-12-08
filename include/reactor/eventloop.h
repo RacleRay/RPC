@@ -39,6 +39,8 @@ class EventLoop {
 
     void addTimerEvent(TimerEvent::s_ptr event);
 
+    bool isLooping() const noexcept;
+
   public:
     static EventLoop* GetCurrentEventLoop();
 
@@ -50,7 +52,7 @@ class EventLoop {
     void initTimer();
 
   private:
-    pid_t m_thread_id{0};   // 用于
+    pid_t m_thread_id{0};
 
     int m_epoll_fd{0};
 
@@ -67,6 +69,8 @@ class EventLoop {
     Mutex m_mutex;
 
     Timer* m_timer{nullptr};
+
+    bool m_is_looping {false};
 };
 
 } // namespace rayrpc
