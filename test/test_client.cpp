@@ -1,5 +1,3 @@
-#include "config.h"
-#include "log.h"
 #include <arpa/inet.h>
 #include <cassert>
 #include <cstring>
@@ -11,6 +9,12 @@
 #include <sys/socket.h>
 #include <unistd.h>
 
+#include "config.h"
+#include "log.h"
+#include "protocol/abstractproto.h"
+#include "protocol/stringcoder.h"
+#include "tcp/netaddr.h"
+#include "tcp/tcpclient.h"
 
 // echo 测试 
 // 应该返回  hello rayrpc! 
@@ -40,12 +44,42 @@ void test_connect() {
     DEBUGLOG("test_connect : success read %d bytes, [%s]", ret, std::string(buf).c_str());
 }
 
+
+void test_tcpclient_stringproto() {
+    rayrpc::IPNetAddr::s_ptr addr = std::make_shared<rayrpc::IPNetAddr>("127.0.0.1", 12345);
+    rayrpc::TcpClient client(addr);
+
+    client.connect([addr, &client]() {
+        DEBUGLOG("test_tcpclient_stringproto : connect to [%s] success.", addr->toString().c_str());
+
+        std::shared_ptr<rayrpc::StringProtocol> proto = std::make_shared<rayrpc::StringProtocol>();
+        proto->info = "test : hello rayrpc!";
+        proto->setReqId("001");
+
+        client.writeMessage(proto, [](rayrpc::AbstractProtocol::s_ptr proto) {
+            DEBUGLOG("test_tcpclient_stringproto : write message success.");
+        });
+
+        client.readMessage("001", [](rayrpc::AbstractProtocol::s_ptr proto) {
+            std::shared_ptr<rayrpc::StringProtocol> strproto = std::dynamic_pointer_cast<rayrpc::StringProtocol>(proto);
+            DEBUGLOG("test_tcpclient_stringproto : read [%s] message success, [%s]", strproto->getReqId().c_str(), strproto->info.c_str());
+        });
+
+        client.writeMessage(proto, [](rayrpc::AbstractProtocol::s_ptr proto) {
+            DEBUGLOG("test_tcpclient_stringproto : write second message success.");
+        });
+    });
+}
+
+
 int main() {
     rayrpc::Config::setGlobalConfig("../../rayrpc.xml");
 
     rayrpc::Logger::initGlobalLogger();
 
-    test_connect();
+    // test_connect();
+
+    test_tcpclient_stringproto();
 
     return 0;
 }
