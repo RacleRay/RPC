@@ -45,6 +45,7 @@ void test_connect() {
 }
 
 
+// !!! 运行需要在 TcpConnection::TcpConnection 中，修改 m_coder 为 new StringCoder().
 void test_tcpclient_stringproto() {
     rayrpc::IPNetAddr::s_ptr addr = std::make_shared<rayrpc::IPNetAddr>("127.0.0.1", 12345);
     rayrpc::TcpClient client(addr);

@@ -2,6 +2,7 @@
 
 #include "log.h"
 #include "protocol/stringcoder.h"
+#include "protocol/tinypbcoder.h"
 #include "reactor/fdevent.h"
 #include "reactor/fdeventgroup.h"
 #include "reflect_enum.h"
@@ -26,7 +27,8 @@ TcpConnection::TcpConnection(EventLoop* event_loop, int fd, int buffer_size, Net
     
     m_fd_event->setNonBlock();
     
-    m_coder = new StringCoder();
+    // m_coder = new StringCoder();
+    m_coder = new TinyPBCoder();
 
     if (m_connection_type == TcpConnectionType::TcpConnectionAtServer) {
         listenReadable();
@@ -180,23 +182,59 @@ void TcpConnection::onWrite() {
     }
 }
 
+// !!! StringCoder test
 // 解析 RPC ，并执行请求，再把 RPC 处理结果发送出去
+// void TcpConnection::excute() {
+//     if (m_connection_type == TcpConnectionAtServer) {
+//         std::vector<char> tmp;
+
+//         size_t content_size = m_in_buffer->readAble();
+//         tmp.resize(content_size);
+
+//         m_in_buffer->readFromBuffer(tmp, content_size);
+
+//         std::string msg(tmp.begin(), tmp.end());
+
+//         INFOLOG("TcpConnection::excute : msg from client [%s], msg size [%d]", m_peer_addr->toString().c_str(), msg.size());
+
+//         // echo for test
+//         m_out_buffer->writeToBuffer(msg.c_str(), msg.length());
+
+//         listenWritable();
+//     } 
+//     else {
+//         // decode buffer
+//         std::vector<AbstractProtocol::s_ptr> proto_msg;
+//         m_coder->decode(m_in_buffer, proto_msg);
+
+//         // do callback
+//         for (auto& msg : proto_msg) {
+//             std::string req_id = msg->getReqId();
+//             auto it = m_read_callbacks.find(req_id);
+//             if (it != m_read_callbacks.end()) {
+//                 it->second(msg);
+//             }
+//         }
+//     }
+// }
+
+
 void TcpConnection::excute() {
     if (m_connection_type == TcpConnectionAtServer) {
-        std::vector<char> tmp;
+        std::vector<AbstractProtocol::s_ptr> fromclient;
+        std::vector<AbstractProtocol::s_ptr> toclient;
 
-        size_t content_size = m_in_buffer->readAble();
-        tmp.resize(content_size);
+        m_coder->decode(m_in_buffer, fromclient);
 
-        m_in_buffer->readFromBuffer(tmp, content_size);
+        for (auto& in_msg: fromclient) {
+            INFOLOG("TcpConnection::excute : msg from client [%s], msg id [%d]", m_peer_addr->toString().c_str(), in_msg->m_req_id.c_str());
+            std::shared_ptr<TinyPBProtocol> msg = std::make_shared<TinyPBProtocol>();
+            msg->m_pb_data = "hello, echo test.";
+            msg->m_req_id = in_msg->m_req_id;
+            toclient.emplace_back(msg);
+        }
 
-        std::string msg(tmp.begin(), tmp.end());
-
-        INFOLOG("TcpConnection::excute : msg from client [%s], msg size [%d]", m_peer_addr->toString().c_str(), msg.size());
-
-        // echo for test
-        m_out_buffer->writeToBuffer(msg.c_str(), msg.length());
-
+        m_coder->encode(toclient, m_out_buffer);
         listenWritable();
     } 
     else {
@@ -213,8 +251,8 @@ void TcpConnection::excute() {
             }
         }
     }
-    
 }
+
 
 void TcpConnection::setState(const TcpState& state) noexcept {
     m_state = state;

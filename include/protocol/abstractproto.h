@@ -10,7 +10,7 @@ class AbstractProtocol : public std::enable_shared_from_this<AbstractProtocol> {
   public:
     using s_ptr = std::shared_ptr<AbstractProtocol>;
 
-    std::string getReqId() {
+    std::string getReqId() const {
         return m_req_id;
     }
 
@@ -20,7 +20,6 @@ class AbstractProtocol : public std::enable_shared_from_this<AbstractProtocol> {
 
     virtual ~AbstractProtocol() = default;
 
-protected:
     std::string m_req_id;
 };
 

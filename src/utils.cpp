@@ -1,3 +1,5 @@
+#include <arpa/inet.h>
+#include <cstring>
 #include <sys/syscall.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -29,6 +31,13 @@ int64_t get_now_time() {
     timeval val;
     gettimeofday(&val, nullptr);
     return val.tv_sec * 1000 + val.tv_usec / 1000;
+}
+
+
+int32_t get_int32_from_netbytes(const void* bytes) {
+    int32_t val;
+    memcpy(&val, bytes, sizeof(val));
+    return ntohl(val);
 }
 
 } // namespace rayrpc::details
