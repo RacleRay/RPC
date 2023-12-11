@@ -208,10 +208,9 @@ void TinyPBCoder::encode(std::vector<AbstractProtocol::s_ptr> &protomsg, TcpBuff
 
         memcpy(tmp, &TinyPBProtocol::PB_END, 1);
         tmp++;
-        *tmp = '\0';
 
         DEBUGLOG("TinyPBCoder::encode : encode message success, req_id [%s], pkg_len[%d].", pmsg->m_req_id.c_str(), pkg_len);
-        DEBUGLOG("TinyPBCoder::encode : message = [%s].", buf);
+        // DEBUGLOG("TinyPBCoder::encode : message = [%s].", buf);
         // end encode
 
         if (buf != nullptr && pkg_len != 0) {
