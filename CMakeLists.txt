@@ -41,9 +41,14 @@ include_directories(${header_dir_list})
 
 # 设置要遍历的文件夹路径
 set(src "./src")
+set(protobuf "./protobuf")
 
 # 使用 file(GLOB ...) 遍历文件夹并保存文件列表
 file(GLOB_RECURSE SRC_LIST "${src}/*.cpp")
+file(GLOB_RECURSE PROTOBUF_LIST "${protobuf}/*.cc")
+# FOREACH(file ${PROTOBUF_LIST})
+#     message(${file})
+# ENDFOREACH()
 
 add_subdirectory(./src)
 

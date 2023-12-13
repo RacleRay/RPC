@@ -35,10 +35,9 @@ void TcpServer::onAccept() {
     NetAddr::s_ptr client_addr = accept_ret.second;
     m_client_count++;
 
-    // TOOD: add clientfd to IO thread (subreactor).
     IOThread* io_thread = m_io_thread_group->getIOThread();
     int buf_size = 128;
-    TcpConnection::s_ptr tcp_conn = std::make_shared<TcpConnection>(io_thread->getEventLoop(), clientfd, buf_size, client_addr);
+    TcpConnection::s_ptr tcp_conn = std::make_shared<TcpConnection>(io_thread->getEventLoop(), clientfd, buf_size, client_addr, m_local_addr);
 
     tcp_conn->setState(TcpState::Connected);
 

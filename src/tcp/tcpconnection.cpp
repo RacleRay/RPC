@@ -6,6 +6,7 @@
 #include "reactor/fdevent.h"
 #include "reactor/fdeventgroup.h"
 #include "reflect_enum.h"
+#include "rpc/rpcdispatcher.h"
 #include "tcp/tcpconnection.h"
 
 
@@ -14,8 +15,10 @@ namespace rayrpc {
 // fd : connection fd
 // TcpConnection::TcpConnection(IOThread* io_thread, int fd, int buffer_size, NetAddr::s_ptr peer_addr)
 //     : m_io_thread(io_thread), m_fd(fd), m_peer_addr(peer_addr), m_state(TcpState::NotConnected)
-TcpConnection::TcpConnection(EventLoop* event_loop, int fd, int buffer_size, NetAddr::s_ptr peer_addr, TcpConnectionType type)
-    : m_event_loop(event_loop), m_fd(fd), m_peer_addr(peer_addr)
+TcpConnection::TcpConnection(EventLoop* event_loop, int fd, int buffer_size, NetAddr::s_ptr peer_addr, 
+                             NetAddr::s_ptr local_addr, TcpConnectionType type)
+    : m_event_loop(event_loop), m_fd(fd), m_peer_addr(std::move(peer_addr)), 
+      m_local_addr(std::move(local_addr)), m_connection_type(type)
 {
     m_state = TcpState::NotConnected;
 
@@ -227,10 +230,16 @@ void TcpConnection::excute() {
         m_coder->decode(m_in_buffer, fromclient);
 
         for (auto& in_msg: fromclient) {
-            INFOLOG("TcpConnection::excute : msg from client [%s], msg id [%d]", m_peer_addr->toString().c_str(), in_msg->m_req_id.c_str());
+            INFOLOG("TcpConnection::excute : msg from client [%s], msg id [%s]", m_peer_addr->toString().c_str(), in_msg->m_req_id.c_str());
             std::shared_ptr<TinyPBProtocol> msg = std::make_shared<TinyPBProtocol>();
-            msg->m_pb_data = "hello, echo test.";
-            msg->m_req_id = in_msg->m_req_id;
+            
+            // =============================================================
+            // test_client_tinypb.cpp 和 test_client.cpp 中测试的是以下的 msd 定义形式
+            // msg->m_pb_data = "hello, echo test.";
+            // msg->m_req_id = in_msg->m_req_id;
+            // =============================================================
+            RpcDispatcher::GetRpcDispatcher()->dispatch(in_msg, msg, shared_from_this());
+
             toclient.emplace_back(msg);
         }
 
@@ -292,6 +301,15 @@ void TcpConnection::shutdown() {
 
 void TcpConnection::setConnectionType(TcpConnectionType type) {
     m_connection_type = type;
+}
+
+
+NetAddr::s_ptr TcpConnection::getLocalAddr() const noexcept {
+    return m_local_addr;
+}
+
+NetAddr::s_ptr TcpConnection::getPeerAddr() const noexcept {
+    return m_peer_addr;
 }
 
 }  // namespace rayrpc

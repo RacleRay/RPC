@@ -2,12 +2,12 @@
 
 #include <memory>
 
-
 #include "iothread/iothread.h"
 #include "protocol/abstractcoder.h"
 #include "protocol/abstractproto.h"
 #include "tcp/netaddr.h"
 #include "tcp/tcpbuffer.h"
+
 
 
 namespace rayrpc {
@@ -24,13 +24,14 @@ enum TcpConnectionType {
     TcpConnectionAtClient = 2,  // 在客户端，代表对服务端的连接
 };
 
-class TcpConnection {
+class TcpConnection : public std::enable_shared_from_this<TcpConnection>  {
 public:
     using s_ptr = std::shared_ptr<TcpConnection>;
 
     // 不使用 IOThread 是因为，在写到 TcpClient 时，发现没有 IOThread，只有一个 EventLoop.
     // TcpConnection(IOThread* io_thread, int fd, int buffer_size, NetAddr::s_ptr peer_addr);
-    TcpConnection(EventLoop* event_loop, int fd, int buffer_size, NetAddr::s_ptr peer_addr, TcpConnectionType type = TcpConnectionAtServer);
+    TcpConnection(EventLoop* event_loop, int fd, int buffer_size, NetAddr::s_ptr peer_addr, 
+                  NetAddr::s_ptr local_addr = nullptr, TcpConnectionType type = TcpConnectionAtServer);
     ~TcpConnection();
 
     void onRead();
@@ -57,6 +58,10 @@ public:
 
     void pushRecvMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> callback);;
 
+    NetAddr::s_ptr getLocalAddr() const noexcept;
+
+    NetAddr::s_ptr getPeerAddr() const noexcept;
+
 private:
     // IOThread* m_io_thread{nullptr};
     EventLoop* m_event_loop{nullptr};
@@ -77,12 +82,11 @@ private:
 
     AbstractCoder* m_coder{nullptr};
 
-    // protocol : write callback(protocol)
+    // protocol , write callback(protocol)
     std::vector<std::pair<AbstractProtocol::s_ptr, std::function<void(AbstractProtocol::s_ptr)>>> m_write_callbacks;
 
-    // req_id : read callback
+    // req_id , read callback
     std::map<std::string, std::function<void(AbstractProtocol::s_ptr)>> m_read_callbacks;
-
 };  // class TcpConnection
 
 }  // namespace rayrpc

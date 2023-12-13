@@ -16,6 +16,8 @@ namespace rayrpc {
 
 struct TinyPBProtocol : public AbstractProtocol {
   public:
+    using s_ptr = std::shared_ptr<TinyPBProtocol>;
+
     TinyPBProtocol() = default;
     ~TinyPBProtocol() override = default;
 

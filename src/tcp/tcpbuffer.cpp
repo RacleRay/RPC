@@ -16,6 +16,9 @@ size_t TcpBuffer::getBufferSize() const noexcept {
 }
 
 size_t TcpBuffer::readAble() const noexcept {
+    if (m_write_index <= m_read_index) {
+        return 0;
+    }
     return m_write_index - m_read_index;
 }
 
@@ -80,7 +83,7 @@ void TcpBuffer::adjustBuffer() {
     std::vector<char> tmp(m_buffer.size());
     size_t count = readAble();
     memcpy(&tmp[0], &m_buffer[m_read_index], count);
-    
+
     m_buffer.swap(tmp);
 
     m_read_index = 0;
@@ -90,6 +93,7 @@ void TcpBuffer::adjustBuffer() {
 }
 
 void TcpBuffer::moveReadIndex(size_t distance) {
+    size_t count = readAble();
     size_t to = m_read_index + distance;
     if (to > m_buffer.size()) {
         ERRLOG("TcpBuffer::moveReadIndex : invalid move distance %ld, old_read_index %ld, buffer size %ld", distance, m_read_index, m_buffer.size());
@@ -106,7 +110,7 @@ void TcpBuffer::moveWriteIndex(size_t distance) {
         return;
     }
     m_write_index = to;
-    adjustBuffer();
+    // adjustBuffer();
 }
 
 }  // namespace rayrpc

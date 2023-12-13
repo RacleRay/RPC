@@ -1,0 +1,17 @@
+syntax = "proto3";
+option cc_generic_services = true;
+
+message testCommRequest {
+  int32 count = 1;
+  string name = 2;
+}
+
+message testCommResponse {
+  int32 ret_code = 1;
+  string res_info = 2;
+  string more_info = 3;
+}
+
+service Comm {
+  rpc testComm(testCommRequest) returns (testCommResponse);
+}

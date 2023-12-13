@@ -86,7 +86,7 @@ void TcpClient::connect(std::function<void()> done_cb) {
 // 异步发送 message，如果发送成功，则回调 done_cb
 void TcpClient::writeMessage(AbstractProtocol::s_ptr protos, std::function<void(AbstractProtocol::s_ptr)> done_cb) {
     // 注册write成功的回调
-    m_connection->pushSendMessage(protos, std::move(done_cb));
+    m_connection->pushSendMessage(std::move(protos), std::move(done_cb));
     m_connection->listenWritable();
 }
 

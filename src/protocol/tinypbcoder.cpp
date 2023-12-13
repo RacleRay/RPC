@@ -10,7 +10,7 @@
 
 namespace {
     
-inline int find_pb_start(rayrpc::TcpBuffer::s_ptr &buffer, bool& proto_end, size_t& out_start_index, size_t& out_end_index) {
+inline int find_pb_start_end(rayrpc::TcpBuffer::s_ptr &buffer, bool& proto_end, size_t& out_start_index, size_t& out_end_index) {
     int pkg_len = 0;
 
     const std::vector<char>& mbuf = buffer->m_buffer;
@@ -148,7 +148,7 @@ inline char* encode_int32(char *buf, int32_t val) {
 
 inline char* encode_string(char *buf, const std::string& str, size_t len) {
     if (!str.empty()) {
-        memcpy(buf, &(str[0]), len);
+        memcpy(buf, str.data(), len);
         DEBUGLOG("encode_string : str = [%s], len = [%d].", str.c_str(), len);
         buf += len;
     }
@@ -227,10 +227,13 @@ void TinyPBCoder::encode(std::vector<AbstractProtocol::s_ptr> &protomsg, TcpBuff
 void TinyPBCoder::decode(TcpBuffer::s_ptr &buffer, std::vector<AbstractProtocol::s_ptr> &out_protomsg) {
     bool proto_end = false;
     while (!proto_end) {
+        // 由于 find_pb_start_end 会修改 m_buffer 的读写 index，所以在临时变量中进行解析
+        std::vector<char> tmp_buffer = buffer->m_buffer;
+
         // 1. 找到 PB_START
         size_t start_index = buffer->readIndex();
         size_t end_index = 0;
-        int pkg_len = find_pb_start(buffer, proto_end, start_index, end_index);
+        int pkg_len = find_pb_start_end(buffer, proto_end, start_index, end_index);
         if (pkg_len == 0) {
             continue;
         }
@@ -239,21 +242,21 @@ void TinyPBCoder::decode(TcpBuffer::s_ptr &buffer, std::vector<AbstractProtocol:
         std::shared_ptr<TinyPBProtocol> proto_msg = std::make_shared<TinyPBProtocol>();
         proto_msg->m_pkg_len = pkg_len;
 
-        if (!parse_req_id(buffer->m_buffer, proto_msg, start_index, end_index)) {
+        if (!parse_req_id(tmp_buffer, proto_msg, start_index, end_index)) {
             continue;
         }
 
-        if (!parse_method_name(buffer->m_buffer, proto_msg, start_index, end_index)) {
+        if (!parse_method_name(tmp_buffer, proto_msg, start_index, end_index)) {
             continue;
         }
 
-        if (!parse_error_info(buffer->m_buffer, proto_msg, start_index, end_index)) {
+        if (!parse_error_info(tmp_buffer, proto_msg, start_index, end_index)) {
             continue;
         }
 
         size_t pb_data_len = proto_msg->m_pkg_len - proto_msg->m_method_name_len - proto_msg->m_req_id_len 
                             - proto_msg->m_err_info_len - TinyPBProtocol::BYTE_SIZE_FIXED;
-        proto_msg->m_pb_data = std::move(std::string(&buffer->m_buffer[start_index], pb_data_len));
+        proto_msg->m_pb_data = std::move(std::string(&tmp_buffer[start_index], pb_data_len));
 
         // check sum skipped
 
