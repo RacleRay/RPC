@@ -113,6 +113,7 @@ void EventLoop::wakeup() {
 
 void EventLoop::stop() {
     m_stop_flag = true;
+    wakeup();
 }
 
 
@@ -209,6 +210,14 @@ void EventLoop::loop() {
             if (trigger_event.events & EPOLLOUT) {
                 DEBUGLOG("EventLoop::loop: fd [%d] trigger EPOLLOUT event", fdevent->getFd())
                 addTask(fdevent->handler(FdEvent::TriggerEvent::OUT_EVENT));
+            }
+            if (trigger_event.events & EPOLLERR) {
+                DEBUGLOG("EventLoop::loop: fd [%d] trigger EPOLLERR event", fdevent->getFd());
+                deleteEpollEvent(fdevent);
+                if (fdevent->handler(FdEvent::TriggerEvent::ERR_EVENT) != nullptr) {
+                    DEBUGLOG("EventLoop::loop: fd [%d] call ERR_EVENT event callback", fdevent->getFd());
+                    addTask(fdevent->handler(FdEvent::TriggerEvent::ERR_EVENT));
+                }
             }
         }
     }

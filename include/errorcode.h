@@ -4,7 +4,7 @@
 #define SYS_ERROR_PREFIX(xx) 1000##xx
 #endif
 
-constexpr int ERROR_PEER_CLOSED = SYS_ERROR_PREFIX(0000);        // 连接时对端关闭
+constexpr int ERROR_PEER_CLOSED = SYS_ERROR_PREFIX(0000); // 连接时对端关闭
 
 constexpr int ERROR_FAILED_CONNECT = SYS_ERROR_PREFIX(0001);     // 连接失败
 constexpr int ERROR_FAILED_GET_REPLY = SYS_ERROR_PREFIX(0002);   // 获取回包失败
@@ -19,3 +19,4 @@ constexpr int ERROR_RPC_CALL_TIMEOUT = SYS_ERROR_PREFIX(0007); // rpc 调用超�
 constexpr int ERROR_SERVICE_NOT_FOUND = SYS_ERROR_PREFIX(0008);  // service 不存在
 constexpr int ERROR_METHOD_NOT_FOUND = SYS_ERROR_PREFIX(0009);   // method 不存在 method
 constexpr int ERROR_PARSE_SERVICE_NAME = SYS_ERROR_PREFIX(0010); // service name 解析失败
+constexpr int ERROR_RPC_CHANNEL_INIT = SYS_ERROR_PREFIX(0011);   // rpc channel 初始化失败

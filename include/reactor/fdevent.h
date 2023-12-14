@@ -11,6 +11,7 @@ class FdEvent {
     enum class TriggerEvent {
         IN_EVENT = EPOLLIN,
         OUT_EVENT = EPOLLOUT,
+        ERR_EVENT = EPOLLERR,
     };
 
     FdEvent() = default;
@@ -22,14 +23,14 @@ class FdEvent {
         }
     };
 
-    int getFd() const { return m_fd; }
+    [[nodiscard]] int getFd() const { return m_fd; }
     epoll_event getEpollEvent() { return m_listen_events; }
 
     // invoke callback which is registed in listen member function.
     std::function<void()> handler(TriggerEvent event_type);
     
     // register specific event and its callback
-    void listen(TriggerEvent event_type, const std::function<void()>& callback);
+    void listen(TriggerEvent event_type, const std::function<void()>& callback, const std::function<void()>& err_callback = nullptr);
 
     void setNonBlock();
 
@@ -40,8 +41,9 @@ class FdEvent {
 
     epoll_event m_listen_events{0};
 
-    std::function<void()> m_read_callback;
-    std::function<void()> m_write_callback;
+    std::function<void()> m_read_callback{nullptr};
+    std::function<void()> m_write_callback{nullptr};
+    std::function<void()> m_err_callback{nullptr};
 };
 
 

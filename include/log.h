@@ -56,7 +56,7 @@ std::string formatString(const char *str, Args &&...args) {
     std::string result;
     if (size > 0) {
         result.resize(size);
-        snprintf(&result[0], size + 1, str, args...);
+        snprintf(result.data(), size + 1, str, args...);
     }
 
     return result;

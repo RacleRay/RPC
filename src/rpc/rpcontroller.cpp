@@ -23,23 +23,23 @@ void RpcController::Reset() {
 // After a call has finished, returns true if the call failed.  The possible
 // reasons for failure depend on the RPC implementation.  Failed() must not
 // be called before a call has finished.  If Failed() returns true, the
-// contents of the response message are undefined.
-bool RpcController::Failed() const {
-    return m_is_failed;
-}
-
+// contents of the response message are undefined.       
+bool RpcController::Failed() const {                     
+    return m_is_failed;                                  
+}                                                        
+                                                         
 // If Failed() is true, returns a human-readable description of the error.
-std::string RpcController::ErrorText() const {
-    return m_err_info;
-}
-
+std::string RpcController::ErrorText() const {           
+    return m_err_info;                                   
+}                                                        
+                                                         
 // Advises the RPC system that the caller desires that the RPC call be
 // canceled.  The RPC system may cancel it immediately, may wait awhile and
 // then cancel it, or may not even cancel the call at all.  If the call is
 // canceled, the "done" callback will still be called and the RpcController
 // will indicate that the call failed at that time.
 void RpcController::StartCancel() {
-    m_is_canceled = true;
+    m_is_canceled = true;          
 }
 
 // Server-side methods ---------------------------------------------
@@ -119,5 +119,12 @@ int RpcController::GetTimeout() const {
     return m_timeout;
 }
 
+void RpcController::SetReqId(const std::string& req_id) {
+    m_req_id = req_id;
+}
+
+std::string RpcController::GetReqId() {
+    return m_req_id;
+}
 
 }  // namespace rayrpc

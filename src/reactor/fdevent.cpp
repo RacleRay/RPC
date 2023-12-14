@@ -15,10 +15,16 @@ std::function<void()> FdEvent::handler(TriggerEvent event_type) {
     if (event_type == TriggerEvent::IN_EVENT) {
         return m_read_callback;
     }
-    return m_write_callback;
+    if (event_type == TriggerEvent::OUT_EVENT) {
+        return m_write_callback;
+    }
+    if (event_type == TriggerEvent::ERR_EVENT) {
+        return m_err_callback;
+    } 
+    return nullptr;
 }
 
-void FdEvent::listen(TriggerEvent event_type, const std::function<void()>& callback) {
+void FdEvent::listen(TriggerEvent event_type, const std::function<void()>& callback, const std::function<void()>& err_callback) {
     if (event_type == TriggerEvent::IN_EVENT) {
         m_listen_events.events |= EPOLLIN;
         m_read_callback = callback;
@@ -26,6 +32,9 @@ void FdEvent::listen(TriggerEvent event_type, const std::function<void()>& callb
         m_listen_events.events |= EPOLLOUT;
         m_write_callback = callback;
     }
+
+    m_err_callback = err_callback;
+
     m_listen_events.data.ptr = this;
 }
 

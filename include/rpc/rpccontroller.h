@@ -9,6 +9,9 @@
 
 namespace rayrpc {
 
+// An RpcController mediates a single method call.  The primary purpose of
+// the controller is to provide a way to manipulate settings specific to the
+// RPC implementation and to find out about RPC-level errors.
 class RpcController : public google::protobuf::RpcController {
   public:
     RpcController() = default;
@@ -26,10 +29,10 @@ class RpcController : public google::protobuf::RpcController {
     // reasons for failure depend on the RPC implementation.  Failed() must not
     // be called before a call has finished.  If Failed() returns true, the
     // contents of the response message are undefined.
-    bool Failed() const override;
+    [[nodiscard]] bool Failed() const override;
 
     // If Failed() is true, returns a human-readable description of the error.
-    std::string ErrorText() const override;
+    [[nodiscard]] std::string ErrorText() const override;
 
     // Advises the RPC system that the caller desires that the RPC call be
     // canceled.  The RPC system may cancel it immediately, may wait awhile and
@@ -52,7 +55,7 @@ class RpcController : public google::protobuf::RpcController {
     // If true, indicates that the client canceled the RPC, so the server may
     // as well give up on replying to it.  The server should still call the
     // final "done" callback.
-    bool IsCanceled() const override;
+    [[nodiscard]] bool IsCanceled() const override;
 
     // Asks that the given callback be called when the RPC is canceled.  The
     // callback will always be called exactly once.  If the RPC completes without
@@ -66,25 +69,29 @@ class RpcController : public google::protobuf::RpcController {
 
     void SetError(int32_t error_code, std::string&& error_info);
 
-    int32_t GetErrorCode() const;
+    [[nodiscard]] int32_t GetErrorCode() const;
 
-    std::string GetErrorInfo() const;
+    [[nodiscard]] std::string GetErrorInfo() const;
 
     void SetRequestId(const std::string& req_id);
 
-    std::string GetRequestId() const;
+    [[nodiscard]] std::string GetRequestId() const;
 
     void SetLocalAddr(NetAddr::s_ptr addr);
 
     void SetPeerAddr(NetAddr::s_ptr addr);
 
-    NetAddr::s_ptr GetLocalAddr() const;
+    [[nodiscard]] NetAddr::s_ptr GetLocalAddr() const;
 
-    NetAddr::s_ptr GetPeerAddr() const;
+    [[nodiscard]] NetAddr::s_ptr GetPeerAddr() const;
 
     void SetTimeout(int timeout);
 
-    int GetTimeout() const;
+    [[nodiscard]] int GetTimeout() const;
+
+    void SetReqId(const std::string& req_id);
+
+    std::string GetReqId();
 
   private:
     int32_t m_err_code{0};
