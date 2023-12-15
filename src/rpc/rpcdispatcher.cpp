@@ -6,6 +6,7 @@
 #include "log.h"
 #include "rpc/rpccontroller.h"
 #include "rpc/rpcdispatcher.h"
+#include "runinfo.h"
 #include "tcp/netaddr.h"
 #include "tcp/tcpconnection.h"
 
@@ -73,6 +74,9 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     rpc_ctl.SetPeerAddr(conn->getPeerAddr());
     rpc_ctl.SetRequestId(req_proto->m_req_id);
 
+    // record run time information
+    RunInfo::GetRunInfo()->m_req_id = req_proto->m_req_id;
+    RunInfo::GetRunInfo()->m_method_name = method_name;
     service->CallMethod(method, &rpc_ctl, request_msg, response_msg, nullptr);
 
     // serialize the response data to protobuf

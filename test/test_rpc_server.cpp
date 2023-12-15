@@ -31,9 +31,11 @@ class CommImpl : public Comm {
         ::testCommResponse *response,
         google::protobuf::Closure *done) override 
     {
-        DEBUGLOG("start sleep 5s");
+        // DEBUGLOG("start sleep 5s");
+        APP_DEBUGLOG("CommImpl::testComm : start sleep 5s");
         sleep(5);
-        DEBUGLOG("end sleep 5s");
+        // DEBUGLOG("end sleep 5s");
+        APP_DEBUGLOG("CommImpl::testComm : end sleep 5s");
         
         if (request->count() < 10) {
             response->set_ret_code(-1);
@@ -41,6 +43,8 @@ class CommImpl : public Comm {
             return;
         }
         response->set_more_info("basic test");
+
+        APP_DEBUGLOG("CommImpl::testComm : testComm done");
     }
 };
 
@@ -57,8 +61,8 @@ void test_tcp_server() {
 
 
 int main() {
-    rayrpc::Config::setGlobalConfig("../../rayrpc.xml");
-    rayrpc::Logger::initGlobalLogger();
+    rayrpc::Config::setGlobalConfig("../../rayrpc.xml", rayrpc::ConfigType::ServerConfig);
+    rayrpc::Logger::initGlobalLogger(rayrpc::LogType::File);
 
     std::shared_ptr<CommImpl> service = std::make_shared<CommImpl>();
     rayrpc::RpcDispatcher::GetRpcDispatcher()->registerService(service);

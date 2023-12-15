@@ -107,8 +107,8 @@ void test_rpc_channel() {
 
 
 int main() {
-    rayrpc::Config::setGlobalConfig("../../rayrpc.xml");
-    rayrpc::Logger::initGlobalLogger();
+    rayrpc::Config::setGlobalConfig("../../rayrpc_client.xml", rayrpc::ConfigType::ClientConfig);
+    rayrpc::Logger::initGlobalLogger(rayrpc::LogType::Console);
 
     // test_tcp_client();
     test_rpc_channel();
