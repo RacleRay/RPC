@@ -26,7 +26,7 @@ class NetAddr {
 
 class IPNetAddr : public NetAddr {
   public:
-    IPNetAddr(const std::string &ip, uint16_t port);
+    IPNetAddr(std::string ip, uint16_t port);
     explicit IPNetAddr(const std::string &addr);
     explicit IPNetAddr(sockaddr_in addr);
 

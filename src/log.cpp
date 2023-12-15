@@ -14,6 +14,7 @@ namespace {
 rayrpc::Logger *g_logger = nullptr;
 
 std::map<rayrpc::LogLevel, std::string> loglevel_to_string = {
+    {rayrpc::LogLevel::Unknown, "Unknown"},
     {rayrpc::LogLevel::Debug, "DEBUG"},
     {rayrpc::LogLevel::Info, "INFO"},
     {rayrpc::LogLevel::Error, "ERROR"}
@@ -21,6 +22,7 @@ std::map<rayrpc::LogLevel, std::string> loglevel_to_string = {
 
 
 std::map<std::string, rayrpc::LogLevel> string_to_loglevel = {
+    {"Unknown", rayrpc::LogLevel::Unknown},
     {"Debug", rayrpc::LogLevel::Debug},
     {"Info", rayrpc::LogLevel::Info},
     {"Error", rayrpc::LogLevel::Error}

@@ -6,7 +6,7 @@
 
 namespace rayrpc {
 
-IPNetAddr::IPNetAddr(const std::string &ip, uint16_t port) : m_ip(ip), m_port(port) {
+IPNetAddr::IPNetAddr(std::string ip, uint16_t port) : m_ip(std::move(ip)), m_port(port) {
     memset(&m_addr, 0, sizeof(m_addr));
 
     m_addr.sin_family = AF_INET;

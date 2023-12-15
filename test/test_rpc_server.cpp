@@ -50,24 +50,26 @@ class CommImpl : public Comm {
 
 
 void test_tcp_server() {
-    rayrpc::IPNetAddr::s_ptr addr = std::make_shared<rayrpc::IPNetAddr>("127.0.0.1", 12345);
 
-    DEBUGLOG("test tcp server : local addr %s", addr->toString().c_str());
-
-    rayrpc::TcpServer tcp_server(addr);
-
-    tcp_server.start();
 }
 
 
+// 测试确保 log 文件夹存在
 int main() {
     rayrpc::Config::setGlobalConfig("../../rayrpc.xml", rayrpc::ConfigType::ServerConfig);
     rayrpc::Logger::initGlobalLogger(rayrpc::LogType::File);
+    auto* config = rayrpc::Config::getGlobalConfig();
 
     std::shared_ptr<CommImpl> service = std::make_shared<CommImpl>();
     rayrpc::RpcDispatcher::GetRpcDispatcher()->registerService(service);
 
-    test_tcp_server();
+    rayrpc::IPNetAddr::s_ptr addr = std::make_shared<rayrpc::IPNetAddr>(config->m_server_ip, config->m_port);
+
+    DEBUGLOG("test tcp server : local addr %s", addr->toString().c_str());
+
+    rayrpc::TcpServer tcp_server(addr, config->m_io_threads);
+
+    tcp_server.start();
 
     return 0;
 }

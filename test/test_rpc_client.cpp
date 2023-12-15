@@ -68,14 +68,14 @@ void test_tcp_client() {
 }
 
 
-void test_rpc_channel() {
+void test_rpc_channel(const std::string& ip, uint16_t port) {
     auto request = std::make_shared<testCommRequest>();
     auto response = std::make_shared<testCommResponse>();
 
     request->set_count(1);
     request->set_name("test");
 
-    auto rpc_channel = std::make_shared<rayrpc::RpcChannel>(std::make_shared<rayrpc::IPNetAddr>("127.0.0.1", 12345));
+    auto rpc_channel = std::make_shared<rayrpc::RpcChannel>(std::make_shared<rayrpc::IPNetAddr>(ip, port));
 
     auto rpc_controller = std::make_shared<rayrpc::RpcController>();
     rpc_controller->SetReqId("666666");
@@ -110,8 +110,9 @@ int main() {
     rayrpc::Config::setGlobalConfig("../../rayrpc_client.xml", rayrpc::ConfigType::ClientConfig);
     rayrpc::Logger::initGlobalLogger(rayrpc::LogType::Console);
 
+    auto* config = rayrpc::Config::getGlobalConfig();
     // test_tcp_client();
-    test_rpc_channel();
+    test_rpc_channel(config->m_server_ip, config->m_port);
 
     INFOLOG("main : test_rpc_channel end.");
 

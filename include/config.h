@@ -26,6 +26,7 @@ class Config {
     int m_log_max_file_size {0};  // 日志文件最大大小，B
     int m_log_sync_inteval {0};   // 日志同步间隔，ms
     
+    std::string m_server_ip;
     int m_port {0};
     int m_io_threads {0};
 };
