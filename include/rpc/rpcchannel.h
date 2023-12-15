@@ -31,6 +31,7 @@ public:
     RpcChannel() = delete;
     
     explicit RpcChannel(NetAddr::s_ptr peer_addr) : m_peer_addr(std::move(peer_addr)) {
+        INFOLOG("RpcChannel init peer_addr=%s.", m_peer_addr->toString().c_str());
         m_client = std::make_shared<TcpClient>(m_peer_addr);
     };
     

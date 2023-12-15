@@ -4,6 +4,7 @@
 #include <google/protobuf/stubs/callback.h>
 #include <string>
 
+#include "log.h"
 #include "tcp/netaddr.h"
 
 
@@ -14,8 +15,8 @@ namespace rayrpc {
 // RPC implementation and to find out about RPC-level errors.
 class RpcController : public google::protobuf::RpcController {
   public:
-    RpcController() = default;
-    ~RpcController() override = default ;
+    RpcController() { INFOLOG("RpcController created"); }
+    ~RpcController() override { INFOLOG("RpcController destroyed"); }
 
     // Client-side methods ---------------------------------------------
     // These calls may be made from the client side only.  Their results

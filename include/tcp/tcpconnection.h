@@ -56,7 +56,9 @@ public:
 
     void pushSendMessage(AbstractProtocol::s_ptr protocol, std::function<void(AbstractProtocol::s_ptr)> callback);
 
-    void pushRecvMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> callback);;
+    void pushRecvMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> callback);
+
+    void reply(std::vector<AbstractProtocol::s_ptr>& replay_msgs);
 
     NetAddr::s_ptr getLocalAddr() const noexcept;
 

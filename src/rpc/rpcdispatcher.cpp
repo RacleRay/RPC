@@ -4,6 +4,7 @@
 
 #include "errorcode.h"
 #include "log.h"
+#include "rpc/rpcclosure.h"
 #include "rpc/rpccontroller.h"
 #include "rpc/rpcdispatcher.h"
 #include "runinfo.h"
@@ -14,6 +15,12 @@
 namespace {
     
 rayrpc::RpcDispatcher* g_rpc_dispatcher = nullptr;
+
+#define DELETE_RESOURCE(RESO)     \
+    if ((RESO) != NULL) {         \
+        delete (RESO);            \
+        (RESO) = NULL;            \
+    }                           \
 
 }  // namespace
 
@@ -39,7 +46,9 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     // find service
     auto it = m_service_map.find(service_name);
     if (it == m_service_map.end()) {
-        ERRLOG("RpcDispatcher::dispatch: req_id [%s], service {%s} not found", req_proto->m_req_id.c_str(), service_name.c_str());
+        ERRLOG("RpcDispatcher::dispatch: req_id [%s], service {%s} not found", 
+            req_proto->m_req_id.c_str(), 
+            service_name.c_str());
         setTinyPBError(rsp_proto, ERROR_SERVICE_NOT_FOUND, "service not found");
         return;
     }
@@ -48,7 +57,9 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     service_s_ptr service = it->second;
     const auto* method = service->GetDescriptor()->FindMethodByName(method_name);
     if (method == nullptr) {
-        ERRLOG("RpcDispatcher::dispatch: req_id [%s], method {%s} not found", req_proto->m_req_id.c_str(), method_name.c_str());
+        ERRLOG("RpcDispatcher::dispatch: req_id [%s], method {%s} not found", 
+            req_proto->m_req_id.c_str(), 
+            method_name.c_str());
         setTinyPBError(rsp_proto, ERROR_METHOD_NOT_FOUND, "method not found");
         return;
     }
@@ -57,48 +68,59 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     if (!request_msg->ParseFromString(req_proto->m_pb_data)) {
         ERRLOG("RpcDispatcher::dispatch: req_id [%s], deserialize pb_data error", req_proto->m_req_id.c_str());
         setTinyPBError(rsp_proto, ERROR_FAILED_DESERIALIZE, "deserialize pb_data error");
-        if (request_msg != nullptr) {
-            delete request_msg;
-            request_msg = nullptr;
-        }
+        DELETE_RESOURCE(request_msg);
         return;
     }
     
-
     // run service method
     INFOLOG("RpcDispatcher::dispatch: req_id [%s], get RPC request {%s}", req_proto->m_req_id.c_str(), request_msg->ShortDebugString().c_str());
 
     google::protobuf::Message* response_msg = service->GetResponsePrototype(method).New();
-    RpcController rpc_ctl;
-    rpc_ctl.SetLocalAddr(conn->getLocalAddr());
-    rpc_ctl.SetPeerAddr(conn->getPeerAddr());
-    rpc_ctl.SetRequestId(req_proto->m_req_id);
+    auto* rpc_ctl = new RpcController();
+    rpc_ctl->SetLocalAddr(conn->getLocalAddr());
+    rpc_ctl->SetPeerAddr(conn->getPeerAddr());
+    rpc_ctl->SetRequestId(req_proto->m_req_id);
 
     // record run time information
     RunInfo::GetRunInfo()->m_req_id = req_proto->m_req_id;
     RunInfo::GetRunInfo()->m_method_name = method_name;
-    service->CallMethod(method, &rpc_ctl, request_msg, response_msg, nullptr);
+    // service->CallMethod(method, rpc_ctl, request_msg, response_msg, nullptr);
 
-    // serialize the response data to protobuf
-    if (!response_msg->SerializeToString(&(rsp_proto->m_pb_data))) {
-        ERRLOG("RpcDispatcher::dispatch: req_id [%s], serialize response error, origin message [%s]", 
-            req_proto->m_req_id.c_str(), response_msg->ShortDebugString().c_str());
-        setTinyPBError(rsp_proto, ERROR_FAILED_SERIALIZE, "serialize response error");
-        if (response_msg != nullptr) {
-            delete response_msg;
-            response_msg = nullptr;
-        }
-        if (request_msg != nullptr) {
-            delete request_msg;
-            request_msg = nullptr;
-        }
-        return;
-    }
+    auto* closure = new RpcClosure(
+        [request_msg, response_msg, req_proto, rsp_proto, conn,  rpc_ctl, this] () mutable
+        {
+            // serialize the response data to protobuf
+            if (!response_msg->SerializeToString(&(rsp_proto->m_pb_data))) {
+                ERRLOG("RpcDispatcher::dispatch: req_id [%s], serialize response error, origin message [%s]", 
+                    req_proto->m_req_id.c_str(), 
+                    response_msg->ShortDebugString().c_str());
+                setTinyPBError(rsp_proto, ERROR_FAILED_SERIALIZE, "serialize response error");
+                DELETE_RESOURCE(response_msg);
+                DELETE_RESOURCE(request_msg);
+                DELETE_RESOURCE(rpc_ctl);
+                return;
+            }
 
-    // end
-    rsp_proto->m_err_code = 0;
-    INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
-            req_proto->m_req_id.c_str(), request_msg->ShortDebugString().c_str(), response_msg->ShortDebugString().c_str());
+            // response to client
+            rsp_proto->m_err_code = 0;
+            rsp_proto->m_err_info = "";
+            INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
+                    req_proto->m_req_id.c_str(), 
+                    request_msg->ShortDebugString().c_str(), 
+                    response_msg->ShortDebugString().c_str());
+
+            std::vector<AbstractProtocol::s_ptr> reply_msgs;
+            reply_msgs.emplace_back(rsp_proto);
+            // encode to out buffer and trigger out event.
+            conn->reply(reply_msgs);  // TcpConnection : reply
+
+            DELETE_RESOURCE(response_msg);
+            DELETE_RESOURCE(request_msg);
+            DELETE_RESOURCE(rpc_ctl);
+        }, 
+        nullptr);  // rpc_inferface is not implememted.
+    
+    service->CallMethod(method, rpc_ctl, request_msg, response_msg, closure);
 }   
 
 void RpcDispatcher::registerService(service_s_ptr service) {

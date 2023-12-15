@@ -13,4 +13,8 @@ RunInfo* RunInfo::GetRunInfo() {
     return t_run_info;
 }
 
+RpcInterface* RunInfo::getRpcInterface() const noexcept {
+    return m_rpc_interface;
+}
+
 }  // namespace rayrpc

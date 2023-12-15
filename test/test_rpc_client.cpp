@@ -97,7 +97,8 @@ void test_rpc_channel(const std::string& ip, uint16_t port) {
             INFOLOG("test_rpc_channel : rpc end.");
             rpc_channel->getTcpClient()->stop();
             rpc_channel.reset();  // for distructor
-        }
+        },
+        nullptr
     );
 
     // rpc_channel->Init(rpc_controller, request, response, rpc_closure);

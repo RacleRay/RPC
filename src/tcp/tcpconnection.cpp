@@ -243,8 +243,9 @@ void TcpConnection::excute() {
             toclient.emplace_back(msg);
         }
 
-        m_coder->encode(toclient, m_out_buffer);
-        listenWritable();
+        // move to TcpConnection::reply(...), active call.
+        // m_coder->encode(toclient, m_out_buffer);
+        // listenWritable();
     } 
     else {
         // decode buffer
@@ -260,6 +261,12 @@ void TcpConnection::excute() {
             }
         }
     }
+}
+
+
+void TcpConnection::reply(std::vector<AbstractProtocol::s_ptr>& replay_msgs) {
+    m_coder->encode(replay_msgs, m_out_buffer);
+    listenWritable();
 }
 
 

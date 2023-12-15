@@ -127,11 +127,13 @@ public:
 public:
     static void* fsyncLoop(void* );
 
+public:
+    pthread_t m_thread;
+
 private:
     std::queue<std::vector<std::string>> m_buffer;
 
     sem_t m_semaphore;
-    pthread_t m_thread;
 
     pthread_cond_t m_condtion;  // 条件变量
     Mutex m_mutex;
@@ -173,8 +175,13 @@ class Logger {
     // 异步将日志落盘
     void syncLoop();
 
+    void flush();
 
+    AsyncLogger::s_ptr getAsyncLogger() { return m_async_logger; }
 
+    AsyncLogger::s_ptr getAppAsyncLogger() { return m_async_app_logger; }
+
+  public:
     static Logger *getGlobalLogger();
 
     static void initGlobalLogger(LogType type = LogType::Console);

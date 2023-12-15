@@ -88,17 +88,40 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     m_client->connect([req_protocol, self_channel, ctrller, response, done]() mutable 
         {
             // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
-            if (self_channel->getTcpClient()->getConnectErrorCode() != 0) {
-
+            TcpClient* client = self_channel->getTcpClient();
+            
+            int err_code = client->getConnectErrorCode();
+            if (err_code != 0) {
+                ctrller->SetError(err_code, client->getConnectErrorInfo());
+                ERRLOG("RpcChannel::CallMethod : [%s | %s] connect failed, error code = [%d], error info = [%s]",
+                    req_protocol->m_req_id.c_str(), 
+                    client->getPeerAddr()->toString().c_str(),
+                    err_code, 
+                    client->getConnectErrorInfo().c_str());
+                
+                self_channel->getTimerEvent()->setCanceled(true);
+                if (done) {
+                    done->Run();
+                }
+                self_channel.reset();
+                return;
             }
+            
+            // success info
+            INFOLOG("RpcChannel::CallMethod : [%s to %s] connect success, req id [%s].",
+                client->getPeerAddr()->toString().c_str(),
+                client->getLocalAddr()->toString().c_str(),
+                req_protocol->m_req_id.c_str()
+            );
 
             self_channel->getTcpClient()->writeMessage(req_protocol, [req_protocol, self_channel, ctrller, response, done](AbstractProtocol::s_ptr) mutable 
             {
                 INFOLOG("RpcChannel::CallMethod : %s send rpc request success. call method name [%s]", 
-                        req_protocol->m_req_id.c_str(), req_protocol->m_method_name.c_str());
+                        req_protocol->m_req_id.c_str(), 
+                        req_protocol->m_method_name.c_str());
 
                 self_channel->getTcpClient()->readMessage(req_protocol->m_req_id, [self_channel, ctrller, response, done](AbstractProtocol::s_ptr msg) mutable 
-                {   
+                {
                     // parse message from server
                     auto rsp_protocol = std::dynamic_pointer_cast<TinyPBProtocol>(msg);
                     INFOLOG("RpcChannel::CallMethod : %s success get rpc response, call method name [%s]", 
@@ -123,6 +146,9 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                         ctrller->SetError(rsp_protocol->m_err_code, std::move(rsp_protocol->m_err_info));
                         return;
                     }
+
+                    INFOLOG("RpcChannel::CallMethod : %s call rpc method [%s], get rpc response success.", 
+                        rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
 
                     if (!ctrller->IsCanceled() && done != nullptr) {
                         done->Run();

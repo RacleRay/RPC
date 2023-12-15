@@ -1,4 +1,5 @@
 #include <cassert>
+#include <csignal>
 #include <cstdio>
 #include <map>
 #include <sstream>
@@ -29,6 +30,19 @@ std::map<std::string, rayrpc::LogLevel> string_to_loglevel = {
 };
 
 
+void CoredumpHandler(int signal_num) {
+    ERRLOG("[CoredumpHandler] signal_num: %d", signal_num);
+
+    g_logger->flush();
+
+    pthread_join(g_logger->getAsyncLogger()->m_thread, nullptr);
+    pthread_join(g_logger->getAppAsyncLogger()->m_thread, nullptr);
+
+    (void)signal(signal_num, SIG_DFL);
+    (void)raise(signal_num);
+}
+
+
 }  // namespace 
 
 namespace rayrpc {
@@ -50,6 +64,13 @@ Logger::Logger(LogLevel level, LogType type): m_level(level), m_type(type) {{
         Config::getGlobalConfig()->m_log_file_path,
         Config::getGlobalConfig()->m_log_max_file_size
     );
+
+    (void)signal(SIGSEGV, CoredumpHandler);
+    (void)signal(SIGABRT, CoredumpHandler);
+    (void)signal(SIGTERM, CoredumpHandler);
+    (void)signal(SIGKILL, CoredumpHandler);
+    (void)signal(SIGINT, CoredumpHandler);
+    (void)signal(SIGSTKFLT, CoredumpHandler);
 }}
 
 Logger *Logger::getGlobalLogger() {
@@ -128,6 +149,16 @@ void Logger::syncLoop() {
     if (!tmp.empty()) {
         m_async_app_logger->pushLogBuffer(tmp);
     }
+}
+
+
+void Logger::flush() {
+    syncLoop();
+    m_async_logger->stop();
+    m_async_logger->flush();
+
+    m_async_app_logger->stop();
+    m_async_app_logger->flush();
 }
 
 
