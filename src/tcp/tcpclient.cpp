@@ -136,7 +136,7 @@ void TcpClient::initLocalAddr() {
         return;
     }
 
-    m_local_addr = std::make_shared<NetAddr>(local_addr);
+    m_local_addr = std::make_shared<IPNetAddr>(local_addr);
 }
 
 
@@ -155,5 +155,10 @@ NetAddr::s_ptr TcpClient::getPeerAddr() const {
 NetAddr::s_ptr TcpClient::getLocalAddr() const {
      return m_local_addr;
 }
+
+void TcpClient::addTimerEvent(TimerEvent::s_ptr timer_event) {
+    m_event_loop->addTimerEvent(std::move(timer_event));
+}
+
 
 }  // namespace rayrpc

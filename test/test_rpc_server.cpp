@@ -31,6 +31,10 @@ class CommImpl : public Comm {
         ::testCommResponse *response,
         google::protobuf::Closure *done) override 
     {
+        DEBUGLOG("start sleep 5s");
+        sleep(5);
+        DEBUGLOG("end sleep 5s");
+        
         if (request->count() < 10) {
             response->set_ret_code(-1);
             response->set_res_info("test limit count with 10");

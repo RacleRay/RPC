@@ -112,7 +112,7 @@ NetAddr::s_ptr RpcController::GetPeerAddr() const {
 }
 
 void RpcController::SetTimeout(int timeout) {
-    m_timeout = timeout;
+    m_timeout = timeout;  // ms
 }
 
 int RpcController::GetTimeout() const {

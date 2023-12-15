@@ -9,21 +9,22 @@
 #include "rpc/rpcchannel.h"
 #include "rpc/rpccontroller.h"
 #include "tcp/tcpclient.h"
+#include "timer/timerevent.h"
 
 
 namespace rayrpc {
 
 
-void RpcChannel::Init(controller_s_ptr controller, message_s_ptr req, message_s_ptr res, closure_s_ptr done) {
-    if (m_is_init) {
-        return;
-    }
-    m_controller = std::move(controller);
-    m_request = std::move(req);
-    m_response = std::move(res);
-    m_closure = std::move(done);
-    m_is_init = true;
-}
+// void RpcChannel::Init(controller_s_ptr controller, message_s_ptr req, message_s_ptr res, closure_s_ptr done) {
+//     if (m_is_init) {
+//         return;
+//     }
+//     m_controller = std::move(controller);
+//     m_request = std::move(req);
+//     m_response = std::move(res);
+//     m_closure = std::move(done);
+//     m_is_init = true;
+// }
 
 
 void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
@@ -59,39 +60,56 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
         return;
     }
 
-    // init channel member for callback
-    if (!m_is_init) {
-        ctrller->SetError(ERROR_RPC_CHANNEL_INIT, "RpcChannel not init.");
-        ERRLOG("RpcChannel::CallMethod : req id [%s], RpcChannel not init.", req_protocol->m_req_id.c_str());
-        return;
-    }
+    // // init channel member for callback
+    // if (!m_is_init) {
+    //     ctrller->SetError(ERROR_RPC_CHANNEL_INIT, "RpcChannel not init.");
+    //     ERRLOG("RpcChannel::CallMethod : req id [%s], RpcChannel not init.", req_protocol->m_req_id.c_str());
+    //     return;
+    // }
 
     // client connect to server and set done callback
     // TcpClient client(m_peer_addr);
     auto self_channel = shared_from_this();
 
-    m_client->connect([req_protocol, self_channel]() mutable 
+    // // add timeout event
+    m_timer_event = std::make_shared<TimerEvent>(ctrller->GetTimeout(), false, 
+        [ctrller, done]() mutable
         {
-            auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
+            ctrller->StartCancel();
+            ctrller->SetError(ERROR_RPC_CALL_TIMEOUT, "rpc call timeout " + std::to_string(ctrller->GetTimeout()));
+            if (done) {
+                done->Run();
+            }
+        }
+    );
+    m_client->addTimerEvent(m_timer_event);
+
+    // set connect callback
+    m_client->connect([req_protocol, self_channel, ctrller, response, done]() mutable 
+        {
+            // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
             if (self_channel->getTcpClient()->getConnectErrorCode() != 0) {
 
             }
 
-            self_channel->getTcpClient()->writeMessage(req_protocol, [req_protocol, self_channel](AbstractProtocol::s_ptr) mutable 
+            self_channel->getTcpClient()->writeMessage(req_protocol, [req_protocol, self_channel, ctrller, response, done](AbstractProtocol::s_ptr) mutable 
             {
                 INFOLOG("RpcChannel::CallMethod : %s send rpc request success. call method name [%s]", 
                         req_protocol->m_req_id.c_str(), req_protocol->m_method_name.c_str());
 
-                self_channel->getTcpClient()->readMessage(req_protocol->m_req_id, [self_channel](AbstractProtocol::s_ptr msg) mutable 
+                self_channel->getTcpClient()->readMessage(req_protocol->m_req_id, [self_channel, ctrller, response, done](AbstractProtocol::s_ptr msg) mutable 
                 {   
                     // parse message from server
                     auto rsp_protocol = std::dynamic_pointer_cast<TinyPBProtocol>(msg);
                     INFOLOG("RpcChannel::CallMethod : %s success get rpc response, call method name [%s]", 
                             rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
 
+                    // remove timer event
+                    self_channel->getTimerEvent()->setCanceled(true);
+
                     // deserialize
-                    auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
-                    if (!(self_channel->getResponse()->ParseFromString(rsp_protocol->m_pb_data))) {
+                    // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
+                    if (!(response->ParseFromString(rsp_protocol->m_pb_data))) {
                         ERRLOG("RpcChannel::CallMethod : %s parse pb_data failed.", rsp_protocol->m_req_id.c_str());
                         ctrller->SetError(ERROR_FAILED_DESERIALIZE, "parse pb_data failed.");
                         return;
@@ -106,8 +124,8 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                         return;
                     }
 
-                    if (self_channel->getClosure() != nullptr) {
-                        self_channel->getClosure()->Run();
+                    if (!ctrller->IsCanceled() && done != nullptr) {
+                        done->Run();
                     }
 
                     self_channel.reset();
@@ -116,24 +134,28 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     });
 }
 
-google::protobuf::RpcController* RpcChannel::getController() {
-    return m_controller.get();
-}
+// google::protobuf::RpcController* RpcChannel::getController() {
+//     return m_controller.get();
+// }
 
-google::protobuf::Message* RpcChannel::getRequest() {
-     return m_request.get();
-}
+// google::protobuf::Message* RpcChannel::getRequest() {
+//      return m_request.get();
+// }
 
-google::protobuf::Message* RpcChannel::getResponse() {
-    return m_response.get();
-}
+// google::protobuf::Message* RpcChannel::getResponse() {
+//     return m_response.get();
+// }
 
-google::protobuf::Closure* RpcChannel::getClosure() {
-    return m_closure.get();
-}
+// google::protobuf::Closure* RpcChannel::getClosure() {
+//     return m_closure.get();
+// }
 
 TcpClient* RpcChannel::getTcpClient() {
     return m_client.get();
+}
+
+TimerEvent::s_ptr RpcChannel::getTimerEvent() {
+    return m_timer_event;
 }
 
 }  // namespace rayrpc

@@ -36,7 +36,7 @@ public:
 
 private:
     int64_t m_alert_time;
-    int64_t m_interval;
+    int64_t m_interval;   // ms
     bool m_is_repeated{false};  // 重复触发
     bool m_is_canceled{false};  // 是否已取消
 

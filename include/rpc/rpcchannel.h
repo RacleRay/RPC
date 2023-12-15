@@ -24,21 +24,21 @@ namespace rayrpc {
 class RpcChannel : public google::protobuf::RpcChannel, public std::enable_shared_from_this<RpcChannel>  {
 public:
     using s_ptr = std::shared_ptr<RpcChannel>;
-    using controller_s_ptr = std::shared_ptr<google::protobuf::RpcController>;
-    using message_s_ptr = std::shared_ptr<google::protobuf::Message>;
-    using closure_s_ptr = std::shared_ptr<google::protobuf::Closure>;
+    // using controller_s_ptr = std::shared_ptr<google::protobuf::RpcController>;
+    // using message_s_ptr = std::shared_ptr<google::protobuf::Message>;
+    // using closure_s_ptr = std::shared_ptr<google::protobuf::Closure>;
 
-    RpcChannel() = default;
+    RpcChannel() = delete;
     
     explicit RpcChannel(NetAddr::s_ptr peer_addr) : m_peer_addr(std::move(peer_addr)) {
-        m_client = std::make_shared<TcpClient>(peer_addr);
+        m_client = std::make_shared<TcpClient>(m_peer_addr);
     };
     
     ~RpcChannel() override {
         DEBUGLOG("~RpcChannel");
     }
 
-    void Init(controller_s_ptr controller, message_s_ptr req, message_s_ptr res, closure_s_ptr done);
+    // void Init(controller_s_ptr controller, message_s_ptr req, message_s_ptr res, closure_s_ptr done);
 
     void CallMethod(const google::protobuf::MethodDescriptor* method,
                     google::protobuf::RpcController* controller,
@@ -46,15 +46,17 @@ public:
                     google::protobuf::Message* response,
                     google::protobuf::Closure* done) override;
 
-    google::protobuf::RpcController* getController();
+    // google::protobuf::RpcController* getController();
 
-    google::protobuf::Message* getRequest();
+    // google::protobuf::Message* getRequest();
 
-    google::protobuf::Message* getResponse();
+    // google::protobuf::Message* getResponse();
 
-    google::protobuf::Closure* getClosure();
+    // google::protobuf::Closure* getClosure();
 
     TcpClient* getTcpClient();
+
+    TimerEvent::s_ptr getTimerEvent();
 
 private:
     NetAddr::s_ptr m_peer_addr {nullptr};
@@ -62,12 +64,14 @@ private:
 
     TcpClient::s_ptr m_client {nullptr};
 
-    controller_s_ptr m_controller {nullptr};
-    message_s_ptr m_request {nullptr};
-    message_s_ptr m_response {nullptr};
-    closure_s_ptr m_closure {nullptr};
+    // controller_s_ptr m_controller {nullptr};
+    // message_s_ptr m_request {nullptr};
+    // message_s_ptr m_response {nullptr};
+    // closure_s_ptr m_closure {nullptr};
 
-    bool m_is_init {false};
+    // bool m_is_init {false};
+
+    TimerEvent::s_ptr m_timer_event {nullptr};
 };  // class RpcChannel
 
 }  // namespace rayrpc

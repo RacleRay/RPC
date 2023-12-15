@@ -6,6 +6,8 @@
 #include "protocol/abstractproto.h"
 #include "reactor/eventloop.h"
 #include "tcpconnection.h"
+#include "timer/timerevent.h"
+
 
 namespace rayrpc {
 
@@ -35,6 +37,8 @@ class TcpClient {
     NetAddr::s_ptr getLocalAddr() const;
 
     void initLocalAddr();
+
+    void addTimerEvent(TimerEvent::s_ptr timer_event);
 
   private:
     NetAddr::s_ptr m_peer_addr;
