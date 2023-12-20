@@ -5,21 +5,20 @@
 
 #include "exception.h"
 #include "log.h"
+#include "rpcinterface.h"
 #include "runinfo.h"
 
 
 namespace rayrpc {
-
-class RpcInterface;
     
 class RpcClosure : public google::protobuf::Closure {
 public:
     using if_s_ptr = std::shared_ptr<RpcInterface>;
 
-    explicit RpcClosure(std::function<void(void)> callback, if_s_ptr rpc_interface) 
+    RpcClosure(std::function<void(void)> callback, if_s_ptr rpc_interface) 
         : m_cb(std::move(callback)), m_rpc_interface(std::move(rpc_interface)) 
     {
-        INFOLOG("RpcClosure created");
+        // INFOLOG("RpcClosure created");
     }
 
     ~RpcClosure() override {
@@ -37,11 +36,28 @@ public:
             if (m_cb != nullptr) {
                 m_cb();
             }
+            if (m_rpc_interface) {
+                m_rpc_interface.reset();
+            }
         } catch (RayrpcException& e) {
             ERRLOG("RpcClosure exception: RayrpcException {}, deal with RayrpcException.handle().", e.what());
             e.handle();
+            if (m_rpc_interface) {
+                m_rpc_interface->setError(e.getErrCode(), e.getErrInfo());
+                m_rpc_interface.reset();
+            }
         } catch (std::exception& e) {
             ERRLOG("RpcClosure exception: std::exception {}.", e.what());
+            if (m_rpc_interface) {
+                m_rpc_interface->setError(-1, "unknown std::exception");
+                m_rpc_interface.reset();
+            }
+        } catch (...) {
+            ERRLOG("RpcClosure exception: unknown exception.");
+            if (m_rpc_interface) {
+                m_rpc_interface->setError(-1, "unknown exception");
+                m_rpc_interface.reset();
+            }
         }
     }
 

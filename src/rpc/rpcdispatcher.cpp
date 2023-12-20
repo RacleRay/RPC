@@ -87,7 +87,7 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     // service->CallMethod(method, rpc_ctl, request_msg, response_msg, nullptr);
 
     auto* closure = new RpcClosure(
-        [request_msg, response_msg, req_proto, rsp_proto, conn,  rpc_ctl, this] () mutable
+        [request_msg, response_msg, req_proto, rsp_proto, conn] () mutable
         {
             // serialize the response data to protobuf
             if (!response_msg->SerializeToString(&(rsp_proto->m_pb_data))) {
@@ -95,28 +95,28 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
                     req_proto->m_req_id.c_str(), 
                     response_msg->ShortDebugString().c_str());
                 setTinyPBError(rsp_proto, ERROR_FAILED_SERIALIZE, "serialize response error");
-                DELETE_RESOURCE(response_msg);
-                DELETE_RESOURCE(request_msg);
-                DELETE_RESOURCE(rpc_ctl);
-                return;
+                // DELETE_RESOURCE(response_msg);
+                // DELETE_RESOURCE(request_msg);
+                // DELETE_RESOURCE(rpc_ctl);
+                // return;
+            } else {
+                // response to client
+                rsp_proto->m_err_code = 0;
+                rsp_proto->m_err_info = "";
+                INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
+                        req_proto->m_req_id.c_str(), 
+                        request_msg->ShortDebugString().c_str(), 
+                        response_msg->ShortDebugString().c_str());
             }
-
-            // response to client
-            rsp_proto->m_err_code = 0;
-            rsp_proto->m_err_info = "";
-            INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
-                    req_proto->m_req_id.c_str(), 
-                    request_msg->ShortDebugString().c_str(), 
-                    response_msg->ShortDebugString().c_str());
 
             std::vector<AbstractProtocol::s_ptr> reply_msgs;
             reply_msgs.emplace_back(rsp_proto);
             // encode to out buffer and trigger out event.
             conn->reply(reply_msgs);  // TcpConnection : reply
 
-            DELETE_RESOURCE(response_msg);
-            DELETE_RESOURCE(request_msg);
-            DELETE_RESOURCE(rpc_ctl);
+            // DELETE_RESOURCE(response_msg);
+            // DELETE_RESOURCE(request_msg);
+            // DELETE_RESOURCE(rpc_ctl);
         }, 
         nullptr);  // rpc_inferface is not implememted.
     

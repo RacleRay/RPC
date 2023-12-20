@@ -20,3 +20,4 @@ constexpr int ERROR_SERVICE_NOT_FOUND = SYS_ERROR_PREFIX(0008);  // service 不�
 constexpr int ERROR_METHOD_NOT_FOUND = SYS_ERROR_PREFIX(0009);   // method 不存在 method
 constexpr int ERROR_PARSE_SERVICE_NAME = SYS_ERROR_PREFIX(0010); // service name 解析失败
 constexpr int ERROR_RPC_CHANNEL_INIT = SYS_ERROR_PREFIX(0011);   // rpc channel 初始化失败
+constexpr int ERROR_RPC_PEER_ADDR = SYS_ERROR_PREFIX(0012);    // rpc 调用时候对端地址异常

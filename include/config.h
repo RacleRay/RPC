@@ -2,16 +2,27 @@
 
 #include <map>
 #include <string>
+#include <tinyxml/tinyxml.h>
 
 #include "log.h"
+#include "tcp/netaddr.h"
 
 namespace rayrpc {
 
 enum class ConfigType { ServerConfig = 1, ClientConfig = 2 };
 
+
+struct RpcStub {
+    std::string name;
+    NetAddr::s_ptr addr;
+    int timeout{2000};
+};
+
+
 class Config {
   public:
     explicit Config(const char *xmlfile, ConfigType type = ConfigType::ServerConfig);
+    ~Config();
 
   public:
     static Config *getGlobalConfig();
@@ -29,6 +40,10 @@ class Config {
     std::string m_server_ip;
     int m_port {0};
     int m_io_threads {0};
+
+    TiXmlDocument* m_xml_document{nullptr};
+
+    std::map<std::string, RpcStub> m_rpc_stubs;
 };
 
 } // namespace rayrpc

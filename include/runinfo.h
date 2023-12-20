@@ -8,6 +8,7 @@ class RpcInterface;
     
 class RunInfo {
 public:
+    [[nodiscard]]
     RpcInterface* getRpcInterface() const noexcept;
 
 public:

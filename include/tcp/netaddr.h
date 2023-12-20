@@ -42,6 +42,9 @@ class IPNetAddr : public NetAddr {
 
     bool checkValid() override;
 
+  public:
+    static bool CheckValid(const std::string &addr);
+
   private:
     std::string m_ip;
     uint16_t m_port{0};

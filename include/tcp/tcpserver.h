@@ -23,6 +23,8 @@ class TcpServer {
 
     void onAccept(); // 有新连接时callback
 
+    void clearClientTimerCallback();
+
   private:
     TcpAcceptor::s_ptr m_acceptor;
 
@@ -33,6 +35,8 @@ class TcpServer {
     IOThreadGroup *m_io_thread_group{nullptr}; // sub reactor
 
     FdEvent *m_listen_fd_event;
+
+    TimerEvent::s_ptr m_clear_client_timer_event;
 
     std::set<TcpConnection::s_ptr> m_clients;
 

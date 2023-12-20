@@ -101,6 +101,9 @@ void TcpClient::connect(std::function<void()> done_cb) {
             ERRLOG("TcpClient::connect : connect failed, server [%s] error [%d], [%s]", m_peer_addr->toString().c_str(), errno, strerror(errno));
             m_connection_err_code = ERROR_FAILED_CONNECT;
             m_connection_err_info = "connect unknown error, sys error = " + std::string(strerror(errno));
+            if (done_cb) {
+                done_cb();
+            }
         }
     }
 }

@@ -44,6 +44,12 @@ class CommImpl : public Comm {
         }
         response->set_more_info("basic test");
 
+        if (done) {
+            done->Run();
+            delete done;
+            done = nullptr;
+        }
+
         APP_DEBUGLOG("CommImpl::testComm : testComm done");
     }
 };
@@ -57,7 +63,7 @@ void test_tcp_server() {
 // 测试确保 log 文件夹存在
 int main() {
     rayrpc::Config::setGlobalConfig("../../rayrpc.xml", rayrpc::ConfigType::ServerConfig);
-    rayrpc::Logger::initGlobalLogger(rayrpc::LogType::File);
+    rayrpc::Logger::initGlobalLogger(rayrpc::LogType::Console);
     auto* config = rayrpc::Config::getGlobalConfig();
 
     std::shared_ptr<CommImpl> service = std::make_shared<CommImpl>();

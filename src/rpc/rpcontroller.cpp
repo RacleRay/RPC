@@ -13,8 +13,11 @@ void RpcController::Reset() {
     m_err_code = 0;
     m_err_info = "";
     m_req_id = "";
+    
     m_is_failed = false;
     m_is_canceled = false;
+    m_is_finished = false;
+
     m_local_addr = nullptr;
     m_peer_addr = nullptr;
     m_timeout = 1000;
@@ -40,6 +43,8 @@ std::string RpcController::ErrorText() const {
 // will indicate that the call failed at that time.
 void RpcController::StartCancel() {
     m_is_canceled = true;          
+    m_is_finished = true;
+    SetFinished(true);
 }
 
 // Server-side methods ---------------------------------------------
@@ -53,6 +58,7 @@ void RpcController::StartCancel() {
 // NOT call SetFailed().
 void RpcController::SetFailed(const std::string &reason) {
     m_err_info = reason;
+    m_is_failed = true;
 }
 
 // If true, indicates that the client canceled the RPC, so the server may
@@ -77,6 +83,7 @@ void RpcController::NotifyOnCancel(google::protobuf::Closure *callback) {
 void RpcController::SetError(int32_t error_code, std::string&& error_info) {
     m_err_code = error_code;
     m_err_info = std::move(error_info);
+    m_is_failed = true;
 }
 
 int32_t RpcController::GetErrorCode() const {
@@ -125,6 +132,14 @@ void RpcController::SetReqId(const std::string& req_id) {
 
 std::string RpcController::GetReqId() {
     return m_req_id;
+}
+
+bool RpcController::IsFinished() const {
+    return m_is_finished;
+}
+
+void RpcController::SetFinished(bool val) {
+    m_is_finished = val;
 }
 
 }  // namespace rayrpc

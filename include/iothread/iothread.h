@@ -28,7 +28,8 @@ private:
     EventLoop* m_eventloop {nullptr};  // every IOThread has one EventLoop
 
     sem_t m_init_semaphore;
-    sem_t m_start_semaphore;
+    
+    sem_t m_start_semaphore;  // 用于在启动前手动插入任务，然后主动启动 loop 循环
 
 };  // class IOThread
 

@@ -94,11 +94,17 @@ class RpcController : public google::protobuf::RpcController {
 
     std::string GetReqId();
 
+    [[nodiscard]]
+    bool IsFinished() const;
+
+    void SetFinished(bool val);
+
   private:
     int32_t m_err_code{0};
 
     bool m_is_failed{false};
     bool m_is_canceled{false};
+    bool m_is_finished{false};
 
     std::string m_err_info;
     std::string m_req_id;

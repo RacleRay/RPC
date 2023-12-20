@@ -16,16 +16,27 @@ TcpServer::TcpServer(NetAddr::s_ptr local_addr, size_t nsubreactor)
 
     m_listen_fd_event = new FdEvent(m_acceptor->getListenFd());
     m_listen_fd_event->listen(FdEvent::TriggerEvent::IN_EVENT, [this](){onAccept();});
-
     m_main_event_loop->addEpollEvent(m_listen_fd_event);
+
+    m_clear_client_timer_event = std::make_shared<TimerEvent>(10000, true, [this]() {clearClientTimerCallback();});
+    m_main_event_loop->addTimerEvent(m_clear_client_timer_event);
 
     INFOLOG("TcpServer::TcpServer : TcpServer listen on [%s].", m_local_addr->toString().c_str());
 }
 
 TcpServer::~TcpServer() {
+    // deal with raw pointer
     if (m_main_event_loop) {
         delete m_main_event_loop;
         m_main_event_loop = nullptr;
+    }
+    if (m_io_thread_group) {
+        delete m_io_thread_group;
+        m_io_thread_group = nullptr;
+    }
+    if (m_listen_fd_event) {
+        delete m_listen_fd_event;
+        m_listen_fd_event = nullptr;
     }
 }
 
@@ -51,5 +62,19 @@ void TcpServer::start() {
     m_io_thread_group->start();
     m_main_event_loop->loop();
 }
+
+
+void TcpServer::clearClientTimerCallback() {
+    auto it = m_clients.begin();
+    for (it = m_clients.begin(); it != m_clients.end();) {
+        if ((*it) != nullptr && (*it).use_count() > 0 && (*it)->getState() == TcpState::Closed) {
+            DEBUGLOG("TcpServer::clearClientTimerCallback : TcpServer clear client fd [%d].", (*it)->getConnFd());
+            it = m_clients.erase(it);
+        } else {
+            it++;
+        }
+    }
+}
+
 
 }  // namespace rayrpc

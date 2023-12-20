@@ -35,14 +35,16 @@ void Config::setGlobalConfig(const char *xmlfile, ConfigType type) {
 
 Config::Config(const char *xmlfile, ConfigType type) {
     m_config_type = type;
-    auto *doc = new TiXmlDocument();
-    if (!doc->LoadFile(xmlfile)) {
+    // auto *doc = new TiXmlDocument();
+
+    m_xml_document = new TiXmlDocument();
+    if (!m_xml_document->LoadFile(xmlfile)) {
         printf("Start rpc server error, failed to read config file %s, error info[%s] \n",
-                xmlfile, doc->ErrorDesc());
+                xmlfile, m_xml_document->ErrorDesc());
         exit(0);
     }
 
-    READ_XML_NODE(root, doc);
+    READ_XML_NODE(root, m_xml_document);
     READ_XML_NODE(log, root_node);
     READ_XML_NODE(server, root_node);
 
@@ -79,7 +81,32 @@ Config::Config(const char *xmlfile, ConfigType type) {
     READ_STR_FROM_XML_NODE(io_threads, server_node);
     m_io_threads = (int)std::strtol(io_threads_str.c_str(), nullptr, 10);
 
+    // 保存 服务名 到 stub 桩的映射，从服务名可以找到对应的服务器地址
+    TiXmlElement* stubs_node = root_node->FirstChildElement("stubs");
+    if (stubs_node) {
+        for (TiXmlElement* node = stubs_node->FirstChildElement("rpc_server"); node; node = node->NextSiblingElement("rpc_server")) {
+            RpcStub stub;
+            stub.name = std::string(node->FirstChildElement("name")->GetText());
+            stub.timeout = (int)std::strtol(node->FirstChildElement("timeout")->GetText(), nullptr, 10);
+            
+            std::string ip = std::string(node->FirstChildElement("ip")->GetText());
+            auto port = (uint16_t)std::strtol(node->FirstChildElement("port")->GetText(), nullptr, 10);
+            stub.addr = std::make_shared<IPNetAddr>(ip, port);
+
+            m_rpc_stubs.insert(std::make_pair(stub.name, stub));
+        }
+    }
+
     printf("SERVER -- CONFIG PORT[%d], IO_THREADS[%d]\n", m_port, m_io_threads);
 }
+
+
+Config::~Config() {
+    if (m_xml_document) {
+        delete m_xml_document;
+        m_xml_document = nullptr;
+    }
+}
+
 
 } // namespace rayrpc

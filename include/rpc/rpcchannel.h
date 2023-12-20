@@ -7,6 +7,7 @@
 #include "protocol/tinypbproto.h"
 #include "rpc/reqid.h"
 #include "rpc/rpcchannel.h"
+#include "rpc/rpcclosure.h"
 #include "rpc/rpccontroller.h"
 #include "tcp/netaddr.h"
 #include "tcp/tcpclient.h"
@@ -32,7 +33,6 @@ public:
     
     explicit RpcChannel(NetAddr::s_ptr peer_addr) : m_peer_addr(std::move(peer_addr)) {
         INFOLOG("RpcChannel init peer_addr=%s.", m_peer_addr->toString().c_str());
-        m_client = std::make_shared<TcpClient>(m_peer_addr);
     };
     
     ~RpcChannel() override {
@@ -57,7 +57,14 @@ public:
 
     TcpClient* getTcpClient();
 
-    TimerEvent::s_ptr getTimerEvent();
+    // TimerEvent::s_ptr getTimerEvent();
+
+public:
+    // 获取 addr ；若传入的是服务名，那么尝试从本地获取对应的 ip:port 
+    static NetAddr::s_ptr FindAddr(const std::string& str);
+
+private:
+    static inline void Callback(RpcController* controller, RpcClosure* closure);
 
 private:
     NetAddr::s_ptr m_peer_addr {nullptr};
@@ -72,7 +79,7 @@ private:
 
     // bool m_is_init {false};
 
-    TimerEvent::s_ptr m_timer_event {nullptr};
+    // TimerEvent::s_ptr m_timer_event {nullptr};
 };  // class RpcChannel
 
 }  // namespace rayrpc

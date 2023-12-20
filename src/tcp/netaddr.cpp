@@ -62,4 +62,25 @@ bool IPNetAddr::checkValid() {
     return true;
 }
 
+
+bool IPNetAddr::CheckValid(const std::string &addr) {
+    size_t i = addr.find_first_of(':');
+    if (i == addr.npos) {
+        return false;
+    }
+    std::string ip = addr.substr(0, i);
+    std::string port = addr.substr(i + 1, addr.size() - i - 1);
+    if (ip.empty() || port.empty()) {
+        return false;
+    }
+
+    int iport = (int)std::strtol(port.c_str(), nullptr, 10);
+    if ((iport <= 0) || (iport > 65536)) {
+        return false;
+    }
+
+    return true;
+}
+
+
 } // namespace rayrpc

@@ -61,12 +61,12 @@ void TcpConnection::listenReadable() {
     m_event_loop->addEpollEvent(m_fd_event);
 }
 
-
+// 注册 send 成功后的回调
 void TcpConnection::pushSendMessage(AbstractProtocol::s_ptr protocol, std::function<void(AbstractProtocol::s_ptr)> callback) {
     m_write_callbacks.emplace_back(protocol, callback);
 }
 
-
+// 注册 recv 成功后的回调
 void TcpConnection::pushRecvMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> callback) {
     m_read_callbacks.insert(std::make_pair(req_id, std::move(callback)));
 }
@@ -154,7 +154,7 @@ void TcpConnection::onWrite() {
             break;
         }
 
-        size_t write_size = m_out_buffer->readAble();
+        size_t write_size = m_out_buffer->readAble();  // read from buffer
         size_t read_index = m_out_buffer->readIndex();
 
         ssize_t ret = write(m_fd, &(m_out_buffer->m_buffer[read_index]), write_size);
@@ -258,6 +258,7 @@ void TcpConnection::excute() {
             auto it = m_read_callbacks.find(req_id);
             if (it != m_read_callbacks.end()) {
                 it->second(msg);
+                m_read_callbacks.erase(it);
             }
         }
     }
@@ -317,6 +318,10 @@ NetAddr::s_ptr TcpConnection::getLocalAddr() const noexcept {
 
 NetAddr::s_ptr TcpConnection::getPeerAddr() const noexcept {
     return m_peer_addr;
+}
+
+int TcpConnection::getConnFd() const noexcept {
+    return m_fd;
 }
 
 }  // namespace rayrpc
