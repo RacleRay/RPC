@@ -319,4 +319,10 @@ NetAddr::s_ptr TcpConnection::getPeerAddr() const noexcept {
     return m_peer_addr;
 }
 
+
+int TcpConnection::getFd() const noexcept {
+    return m_fd;
+}
+
+
 }  // namespace rayrpc

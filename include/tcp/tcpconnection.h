@@ -64,6 +64,8 @@ public:
 
     NetAddr::s_ptr getPeerAddr() const noexcept;
 
+    int getFd() const noexcept;
+
 private:
     // IOThread* m_io_thread{nullptr};
     EventLoop* m_event_loop{nullptr};
