@@ -10,6 +10,7 @@
 #include "rpc/rpccontroller.h"
 #include "tcp/tcpclient.h"
 #include "timer/timerevent.h"
+#include "runinfo.h"
 
 
 namespace rayrpc {
@@ -41,7 +42,12 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
 
     // set protocol message id
     if (ctrller->GetReqId().empty()) {
-        req_protocol->m_req_id = gen_request_id();
+        std::string req_id = RunInfo::GetRunInfo()->m_req_id;
+        if (req_id.empty()) {
+            req_protocol->m_req_id = gen_request_id();
+        } else {
+            req_protocol->m_req_id = req_id;
+        }
         ctrller->SetReqId(req_protocol->m_req_id);
     } else {
         req_protocol->m_req_id = ctrller->GetReqId();

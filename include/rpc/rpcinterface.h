@@ -1,6 +1,8 @@
+#pragma once
+
 #include <google/protobuf/message.h>
 
-#include "rpcclosure.h"
+// #include "rpcclosure.h"
 #include "rpccontroller.h"
 
 
@@ -12,9 +14,13 @@ namespace rayrpc {
         (RESO) = NULL;            \
     }                           \
 
+class RpcClosure;
+
 /*
  * Rpc Interface Base Class
  * All interface should extend this abstract class
+ * 
+ * 用于设置用户自定义的回调处理函数
  * 
  * Will be invoked at RpcClosure.Run(). 
 */
@@ -23,7 +29,7 @@ class RpcInterface : public std::enable_shared_from_this<RpcInterface> {
     // RpcInterface(RpcClosure *done, RpcController *controller) : m_done(done), m_controller(controller) {};
 
     RpcInterface(const google::protobuf::Message* req, google::protobuf::Message* rsp, RpcClosure *done, RpcController *controller)
-        : m_request(req), m_response(rsp), m_done(done), m_controller(controller) 
+        : m_request(req), m_response(rsp), m_closure(done), m_controller(controller) 
     {
         INFOLOG("RpcInterface created.");
     };
@@ -38,32 +44,28 @@ class RpcInterface : public std::enable_shared_from_this<RpcInterface> {
     virtual void run() = 0;
 
     // set error code and error into to response message
-    virtual void setError(int64_t code, const std::string &err_info) = 0;
+    virtual void setError(int code, const std::string &err_info) = 0;
 
     // reply to client
     // you should call is when you want to response back. 
     // invoke done function, then a rpc call ends.
-    virtual void reply() {
-        if (m_done) {
-            m_done->Run();
-        }
-    }
+    virtual void reply();
 
     // free resourse
     void destroy() {
-        DELETE_RESOURCE(m_request);
-        DELETE_RESOURCE(m_response);
-        DELETE_RESOURCE(m_done);
-        DELETE_RESOURCE(m_controller);
+        // DELETE_RESOURCE(m_request);
+        // DELETE_RESOURCE(m_response);
+        // DELETE_RESOURCE(m_done);
+        // DELETE_RESOURCE(m_controller);
     }
 
     // alloc a closure object which handle by this interface
     std::shared_ptr<RpcClosure> newRpcClosure(std::function<void()>& cb) {
-        return std::make_shared<RpcClosure>(shared_from_this(),cb);
+        return std::make_shared<RpcClosure>(cb, shared_from_this());
     }
 
   protected:
-    RpcClosure *m_done{nullptr};  // callback
+    RpcClosure *m_closure{nullptr};  // callback
 
     RpcController *m_controller{nullptr};
 
