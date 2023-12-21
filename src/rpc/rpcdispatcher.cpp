@@ -20,7 +20,7 @@ rayrpc::RpcDispatcher* g_rpc_dispatcher = nullptr;
     if ((RESO) != NULL) {         \
         delete (RESO);            \
         (RESO) = NULL;            \
-    }                           \
+    }                            \
 
 }  // namespace
 
@@ -95,20 +95,16 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
                     req_proto->m_req_id.c_str(), 
                     response_msg->ShortDebugString().c_str());
                 setTinyPBError(rsp_proto, ERROR_FAILED_SERIALIZE, "serialize response error");
-                DELETE_RESOURCE(response_msg);
-                DELETE_RESOURCE(request_msg);
-                DELETE_RESOURCE(rpc_ctl);
-                return;
+            } else {
+                rsp_proto->m_err_code = 0;
+                rsp_proto->m_err_info = "";
+                INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
+                        req_proto->m_req_id.c_str(), 
+                        request_msg->ShortDebugString().c_str(), 
+                        response_msg->ShortDebugString().c_str());
             }
 
             // response to client
-            rsp_proto->m_err_code = 0;
-            rsp_proto->m_err_info = "";
-            INFOLOG("RpcDispatcher::dispatch: req_id [%s], dispatch RPC request {%s}, get RPC response {%s}", 
-                    req_proto->m_req_id.c_str(), 
-                    request_msg->ShortDebugString().c_str(), 
-                    response_msg->ShortDebugString().c_str());
-
             std::vector<AbstractProtocol::s_ptr> reply_msgs;
             reply_msgs.emplace_back(rsp_proto);
             // encode to out buffer and trigger out event.
