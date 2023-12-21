@@ -35,14 +35,15 @@ void Config::setGlobalConfig(const char *xmlfile, ConfigType type) {
 
 Config::Config(const char *xmlfile, ConfigType type) {
     m_config_type = type;
-    auto *doc = new TiXmlDocument();
-    if (!doc->LoadFile(xmlfile)) {
+    m_xml_document = new TiXmlDocument();
+    if (!m_xml_document->LoadFile(xmlfile)) {
         printf("Start rpc server error, failed to read config file %s, error info[%s] \n",
-                xmlfile, doc->ErrorDesc());
+                xmlfile, 
+                m_xml_document->ErrorDesc());
         exit(0);
     }
 
-    READ_XML_NODE(root, doc);
+    READ_XML_NODE(root, m_xml_document);
     READ_XML_NODE(log, root_node);
     READ_XML_NODE(server, root_node);
 
