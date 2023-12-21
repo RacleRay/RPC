@@ -27,6 +27,14 @@ TcpServer::~TcpServer() {
         delete m_main_event_loop;
         m_main_event_loop = nullptr;
     }
+    if (m_io_thread_group) {
+        delete m_io_thread_group;
+        m_io_thread_group = nullptr;
+    }
+    if (m_listen_fd_event) {
+        delete m_listen_fd_event;
+        m_listen_fd_event = nullptr;
+    }
 }
 
 void TcpServer::onAccept() {
