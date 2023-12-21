@@ -54,7 +54,6 @@ class CommImpl : public Comm {
     }
 };
 
-
 void test_tcp_server() {
 
 }
@@ -62,7 +61,7 @@ void test_tcp_server() {
 
 // 测试确保 log 文件夹存在
 int main() {
-    rayrpc::Config::setGlobalConfig("../../rayrpc.xml", rayrpc::ConfigType::ServerConfig);
+    rayrpc::Config::setGlobalConfig("/home/racle/cppProject/RPC/rayrpc.xml", rayrpc::ConfigType::ServerConfig);
     rayrpc::Logger::initGlobalLogger(rayrpc::LogType::Console);
     auto* config = rayrpc::Config::getGlobalConfig();
 

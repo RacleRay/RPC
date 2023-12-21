@@ -181,21 +181,21 @@ void EventLoop::loop() {
         while (!tmp_tasks.empty()) {
             std::function<void()> task = tmp_tasks.front();
             tmp_tasks.pop();
-            if (task) {
-                task();
-            }
-
-            // try {
-            //     // processing pending tasks
-            //     if (task) {
-            //         task();
-            //     }
-            // } catch (RayrpcException& e) {
-            //     ERRLOG("EventLoop::loop: rayrpc exception caught, error info [%s]", e.what());
-            //     e.handle();
-            // } catch (std::exception& e) {
-            //     ERRLOG("EventLoop::loop: std::exception caught, error info [%s]", e.what());
+            // if (task) {
+            //     task();
             // }
+
+            try {
+                // processing pending tasks
+                if (task) {
+                    task();
+                }
+            } catch (RayrpcException& e) {
+                ERRLOG("EventLoop::loop: rayrpc exception caught, error info [%s]", e.what());
+                e.handle();
+            } catch (std::exception& e) {
+                ERRLOG("EventLoop::loop: std::exception caught, error info [%s]", e.what());
+            }
         }
 
         int timeout = g_epoll_max_timeout;

@@ -124,6 +124,7 @@ void TcpConnection::onRead() {
         ERRLOG("TcpConnection::onRead : not read all data.");
     }
 
+    // decode the m_in_buf message.
     excute();
 }
 
@@ -149,7 +150,7 @@ void TcpConnection::onWrite() {
     bool is_write_all = false;
     while (!is_write_all) {
         if (m_out_buffer->readAble() == 0) {
-            DEBUGLOG("TcpConnection::onWrite : no data to write to client [%s].", m_peer_addr->toString().c_str());
+            DEBUGLOG("TcpConnection::onWrite : no data to write to peer [%s].", m_peer_addr->toString().c_str());
             is_write_all = true;
             break;
         }
@@ -159,12 +160,12 @@ void TcpConnection::onWrite() {
 
         ssize_t ret = write(m_fd, &(m_out_buffer->m_buffer[read_index]), write_size);
         if (ret >= write_size) {
-            DEBUGLOG("TcpConnection::onwrite : no data to write to client [%s].", m_peer_addr->toString().c_str());
+            DEBUGLOG("TcpConnection::onwrite : no data to write to peer [%s].", m_peer_addr->toString().c_str());
             is_write_all = true;
             break;
         }
         if (ret == -1 && errno == EAGAIN) {
-            ERRLOG("TcpConnection::onwrite : write to client [%s] error, out buffer is full.", m_peer_addr->toString().c_str());
+            ERRLOG("TcpConnection::onwrite : write to peer [%s] error, out buffer is full.", m_peer_addr->toString().c_str());
             break;
         }
     }
@@ -224,13 +225,13 @@ void TcpConnection::onWrite() {
 
 void TcpConnection::excute() {
     if (m_connection_type == TcpConnectionAtServer) {
-        std::vector<AbstractProtocol::s_ptr> fromclient;
-        std::vector<AbstractProtocol::s_ptr> toclient;
+        std::vector<AbstractProtocol::s_ptr> frompeer;
+        std::vector<AbstractProtocol::s_ptr> topeer;
 
-        m_coder->decode(m_in_buffer, fromclient);
+        m_coder->decode(m_in_buffer, frompeer);
 
-        for (auto& in_msg: fromclient) {
-            INFOLOG("TcpConnection::excute : msg from client [%s], msg id [%s]", m_peer_addr->toString().c_str(), in_msg->m_req_id.c_str());
+        for (auto& in_msg: frompeer) {
+            INFOLOG("TcpConnection::excute : msg from peer [%s], msg id [%s]", m_peer_addr->toString().c_str(), in_msg->m_req_id.c_str());
             std::shared_ptr<TinyPBProtocol> msg = std::make_shared<TinyPBProtocol>();
             
             // =============================================================
@@ -240,14 +241,14 @@ void TcpConnection::excute() {
             // =============================================================
             RpcDispatcher::GetRpcDispatcher()->dispatch(in_msg, msg, shared_from_this());
 
-            toclient.emplace_back(msg);
+            topeer.emplace_back(msg);
         }
 
         // move to TcpConnection::reply(...), active call.
-        // m_coder->encode(toclient, m_out_buffer);
+        // m_coder->encode(topeer, m_out_buffer);
         // listenWritable();
     } 
-    else {
+    else {  // client
         // decode buffer
         std::vector<AbstractProtocol::s_ptr> proto_msg;
         m_coder->decode(m_in_buffer, proto_msg);

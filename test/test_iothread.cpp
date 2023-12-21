@@ -55,9 +55,7 @@ void test_io_thread() {
     rayrpc::TimerEvent::s_ptr timer_event =
         std::make_shared<rayrpc::TimerEvent>(1000, true, [&i]() { INFOLOG("trigger timer event, count=%d", i++); });
 
-
     rayrpc::IOThread io_thread;
-
 
     io_thread.getEventLoop()->addEpollEvent(&event);
     io_thread.getEventLoop()->addTimerEvent(timer_event);

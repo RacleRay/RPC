@@ -12,6 +12,7 @@ public:
 
     TimerEvent(int64_t interval, bool is_repeated, std::function<void()> task);
 
+    [[nodiscard]]    
     int64_t getAlertTime() const noexcept {
         return m_alert_time;
     }
@@ -19,15 +20,18 @@ public:
     void setCanceled(bool is_cancel)  noexcept {
         m_is_canceled = is_cancel;
     }
-
+    
+    [[nodiscard]]
     bool isCanceled() const noexcept {
         return m_is_canceled;
     }
-
+    
+    [[nodiscard]]
     bool isRepeated() const noexcept {
         return m_is_repeated;
     }
 
+    [[nodiscard]]
     std::function<void()> getTask() const noexcept {
         return m_task;
     }

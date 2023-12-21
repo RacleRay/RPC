@@ -27,13 +27,17 @@ class TcpClient {
     void readMessage(const std::string& req_id, std::function<void(AbstractProtocol::s_ptr)> done_cb);
 
     void stop();  // 由于使用了服务端 eventloop，设置 client 主动终止循环的选项，防止多次连接后，资源不释放
-
+    
+    [[nodiscard]]
     int getConnectErrorCode() const;
-
+    
+    [[nodiscard]]
     std::string getConnectErrorInfo() const;
-
+    
+    [[nodiscard]]
     NetAddr::s_ptr getPeerAddr() const;
-
+    
+    [[nodiscard]]
     NetAddr::s_ptr getLocalAddr() const;
 
     void initLocalAddr();

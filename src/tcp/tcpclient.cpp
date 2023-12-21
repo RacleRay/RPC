@@ -83,13 +83,15 @@ void TcpClient::connect(std::function<void()> done_cb) {
 
                     // TODO: 也许需要删除 m_fd_event ，防止重复触发
                     // LT 模式，需要删除可写事件
-                    m_fd_event->cancel(FdEvent::TriggerEvent::OUT_EVENT);
-                    m_event_loop->addEpollEvent(m_fd_event);
+                    // m_fd_event->cancel(FdEvent::TriggerEvent::OUT_EVENT);
+                    // m_event_loop->addEpollEvent(m_fd_event);
+                    m_event_loop->deleteEpollEvent(m_fd_event);
 
                     if (is_connected && done_cb) {
                         done_cb();
                     }
-                });
+                }
+            );
             m_event_loop->addEpollEvent(m_fd_event);
 
             if (!m_event_loop->isLooping()) {

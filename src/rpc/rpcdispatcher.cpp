@@ -20,14 +20,14 @@ rayrpc::RpcDispatcher* g_rpc_dispatcher = nullptr;
     if ((RESO) != NULL) {         \
         delete (RESO);            \
         (RESO) = NULL;            \
-    }                           \
+    }                             \
 
 }  // namespace
 
 
 namespace rayrpc {
 
-// process request and generate response
+// TcpServer : process request and generate response
 void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const AbstractProtocol::s_ptr& response,  const TcpConnection::s_ptr& conn) {
     std::shared_ptr<TinyPBProtocol> req_proto = std::dynamic_pointer_cast<TinyPBProtocol>(request);
     std::shared_ptr<TinyPBProtocol> rsp_proto = std::dynamic_pointer_cast<TinyPBProtocol>(response);
@@ -52,9 +52,9 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
         setTinyPBError(rsp_proto, ERROR_SERVICE_NOT_FOUND, "service not found");
         return;
     }
-
-    // deserialize the pb_data
     service_s_ptr service = it->second;
+
+    // find method
     const auto* method = service->GetDescriptor()->FindMethodByName(method_name);
     if (method == nullptr) {
         ERRLOG("RpcDispatcher::dispatch: req_id [%s], method {%s} not found", 
@@ -63,7 +63,8 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
         setTinyPBError(rsp_proto, ERROR_METHOD_NOT_FOUND, "method not found");
         return;
     }
-    
+
+    // deserialize the pb_data
     google::protobuf::Message* request_msg = service->GetRequestPrototype(method).New();
     if (!request_msg->ParseFromString(req_proto->m_pb_data)) {
         ERRLOG("RpcDispatcher::dispatch: req_id [%s], deserialize pb_data error", req_proto->m_req_id.c_str());
@@ -72,10 +73,10 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
         return;
     }
     
-    // run service method
+    // ==========================================================================
     INFOLOG("RpcDispatcher::dispatch: req_id [%s], get RPC request {%s}", req_proto->m_req_id.c_str(), request_msg->ShortDebugString().c_str());
 
-    google::protobuf::Message* response_msg = service->GetResponsePrototype(method).New();
+    // Rpc Controller record some informations
     auto* rpc_ctl = new RpcController();
     rpc_ctl->SetLocalAddr(conn->getLocalAddr());
     rpc_ctl->SetPeerAddr(conn->getPeerAddr());
@@ -86,8 +87,10 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
     RunInfo::GetRunInfo()->m_method_name = method_name;
     // service->CallMethod(method, rpc_ctl, request_msg, response_msg, nullptr);
 
+    // Rpc service complete callback
+    google::protobuf::Message* response_msg = service->GetResponsePrototype(method).New();
     auto* closure = new RpcClosure(
-        [request_msg, response_msg, req_proto, rsp_proto, conn] () mutable
+        [request_msg, response_msg, req_proto, rsp_proto, rpc_ctl, conn] () mutable
         {
             // serialize the response data to protobuf
             if (!response_msg->SerializeToString(&(rsp_proto->m_pb_data))) {
@@ -95,10 +98,6 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
                     req_proto->m_req_id.c_str(), 
                     response_msg->ShortDebugString().c_str());
                 setTinyPBError(rsp_proto, ERROR_FAILED_SERIALIZE, "serialize response error");
-                // DELETE_RESOURCE(response_msg);
-                // DELETE_RESOURCE(request_msg);
-                // DELETE_RESOURCE(rpc_ctl);
-                // return;
             } else {
                 // response to client
                 rsp_proto->m_err_code = 0;
@@ -110,16 +109,20 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
             }
 
             std::vector<AbstractProtocol::s_ptr> reply_msgs;
-            reply_msgs.emplace_back(rsp_proto);
+            reply_msgs.push_back(rsp_proto);
             // encode to out buffer and trigger out event.
             conn->reply(reply_msgs);  // TcpConnection : reply
-
-            // DELETE_RESOURCE(response_msg);
-            // DELETE_RESOURCE(request_msg);
-            // DELETE_RESOURCE(rpc_ctl);
+            
+            // 更好的做法是，在 RpcInterface 中，统一释放资源
+            // 但是在申请资源的韩式中释放资源，我觉得也合理
+            DELETE_RESOURCE(response_msg);
+            DELETE_RESOURCE(request_msg);
+            DELETE_RESOURCE(rpc_ctl);
         }, 
-        nullptr);  // rpc_inferface is not implememted.
+        nullptr
+    );  // rpc_inferface for User defined callbacks.
     
+    // run service method
     service->CallMethod(method, rpc_ctl, request_msg, response_msg, closure);
 }   
 
@@ -167,6 +170,5 @@ bool RpcDispatcher::ParseServiceFullName(const std::string &full_name, std::stri
 
     return true;
 }
-
 
 } // namespace rayrpc

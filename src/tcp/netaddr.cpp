@@ -75,12 +75,7 @@ bool IPNetAddr::CheckValid(const std::string &addr) {
     }
 
     int iport = (int)std::strtol(port.c_str(), nullptr, 10);
-    if ((iport <= 0) || (iport > 65536)) {
-        return false;
-    }
-
-    return true;
+    return (iport > 0) && (iport <= 65535);
 }
-
 
 } // namespace rayrpc

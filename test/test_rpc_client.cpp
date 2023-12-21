@@ -101,9 +101,15 @@ void test_rpc_channel(const std::string& ip, uint16_t port) {
         nullptr
     );
 
+    {
+        std::shared_ptr<rayrpc::RpcChannel> channel = std::make_shared<rayrpc::RpcChannel>(
+            rayrpc::RpcChannel::FindAddr("127.0.0.1:12345")
+        );
+        Comm_Stub(channel.get()).testComm(rpc_controller.get(), request.get(), response.get(), rpc_closure.get());
+    }
     // rpc_channel->Init(rpc_controller, request, response, rpc_closure);
-    Comm_Stub stub(rpc_channel.get());
-    stub.testComm(rpc_controller.get(), request.get(), response.get(), rpc_closure.get());
+    // Comm_Stub stub(rpc_channel.get());
+    // stub.testComm(rpc_controller.get(), request.get(), response.get(), rpc_closure.get());
 }
 
 

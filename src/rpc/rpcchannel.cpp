@@ -30,6 +30,7 @@ namespace rayrpc {
 // }
 
 
+// TcpClient 通过 RpcChannel 会调用到子类的 CallMethod，完成向服务端发送请求，并读取回包
 void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                     google::protobuf::RpcController* controller,
                     const google::protobuf::Message* request,
@@ -117,7 +118,8 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
     m_client->addTimerEvent(timer_event);
 
     // set connect callback
-    m_client->connect([req_protocol, self_channel, ctrller, response, closure]() mutable 
+    m_client->connect(
+        [req_protocol, self_channel, ctrller, response, closure]() mutable 
         {
             // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
             TcpClient* client = self_channel->getTcpClient();
@@ -142,53 +144,61 @@ void RpcChannel::CallMethod(const google::protobuf::MethodDescriptor* method,
                 req_protocol->m_req_id.c_str()
             );
 
-            self_channel->getTcpClient()->writeMessage(req_protocol, [req_protocol, self_channel, ctrller, response, closure](AbstractProtocol::s_ptr) mutable 
-            {
-                INFOLOG("RpcChannel::CallMethod : %s send rpc request success. call method name [%s]", 
-                        req_protocol->m_req_id.c_str(), 
-                        req_protocol->m_method_name.c_str());
-
-                self_channel->getTcpClient()->readMessage(req_protocol->m_req_id, [self_channel, ctrller, response, closure](AbstractProtocol::s_ptr msg) mutable 
+            // set write complete callback.
+            self_channel->getTcpClient()->writeMessage(req_protocol, 
+                [req_protocol, self_channel, ctrller, response, closure](AbstractProtocol::s_ptr) mutable 
                 {
-                    // parse message from server
-                    auto rsp_protocol = std::dynamic_pointer_cast<TinyPBProtocol>(msg);
-                    INFOLOG("RpcChannel::CallMethod : %s success get rpc response, call method name [%s]", 
-                            rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
-
-                    // remove timer event  ！Note ：will do these at Callback
-                    // self_channel->getTimerEvent()->setCanceled(true);
-                    // ctrller->SetFinished(true);  
-
-                    // deserialize
-                    // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
-                    if (!(response->ParseFromString(rsp_protocol->m_pb_data))) {
-                        ERRLOG("RpcChannel::CallMethod : %s parse pb_data failed.", rsp_protocol->m_req_id.c_str());
-                        ctrller->SetError(ERROR_FAILED_DESERIALIZE, "parse pb_data failed.");
-                        Callback(ctrller, closure);
-                        return;
-                    }     
-
-                    // check error info
-                    if (rsp_protocol->m_err_code != 0) {
-                        ERRLOG("RpcChannel::CallMethod : %s rpc method [%s], get rpc response error, error code = [%d], error msg = [%s]",
-                                rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str(), 
-                                rsp_protocol->m_err_code, rsp_protocol->m_err_info.c_str());
-                        ctrller->SetError(rsp_protocol->m_err_code, std::move(rsp_protocol->m_err_info));
-                        Callback(ctrller, closure);
-                        return;
-                    }
-
-                    INFOLOG("RpcChannel::CallMethod : %s call rpc method [%s], get rpc response success.", 
-                        rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
-
-                    if (!ctrller->IsCanceled() && closure != nullptr) {
-                        closure->Run();
-                    }
+                    INFOLOG("RpcChannel::CallMethod : %s send rpc request success. call method name [%s]", 
+                            req_protocol->m_req_id.c_str(), 
+                            req_protocol->m_method_name.c_str());
                     
-                    Callback(ctrller, closure);
-                });
-        });
-    });
+                    // set read complete callback.
+                    self_channel->getTcpClient()->readMessage(req_protocol->m_req_id, 
+                        [ctrller, response, closure](AbstractProtocol::s_ptr msg) mutable 
+                        {
+                            // parse message from server
+                            auto rsp_protocol = std::dynamic_pointer_cast<TinyPBProtocol>(msg);
+                            INFOLOG("RpcChannel::CallMethod : %s success get rpc response, call method name [%s]", 
+                                    rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
+
+                            // remove timer event  ！Note ：will do these at Callback
+                            // self_channel->getTimerEvent()->setCanceled(true);
+                            // ctrller->SetFinished(true);  
+
+                            // deserialize
+                            // auto* ctrller = dynamic_cast<RpcController*>(self_channel->getController());
+                            if (!(response->ParseFromString(rsp_protocol->m_pb_data))) {
+                                ERRLOG("RpcChannel::CallMethod : %s parse pb_data failed.", rsp_protocol->m_req_id.c_str());
+                                ctrller->SetError(ERROR_FAILED_DESERIALIZE, "parse pb_data failed.");
+                                Callback(ctrller, closure);
+                                return;
+                            }     
+
+                            // check error info
+                            if (rsp_protocol->m_err_code != 0) {
+                                ERRLOG("RpcChannel::CallMethod : %s rpc method [%s], get rpc response error, error code = [%d], error msg = [%s]",
+                                        rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str(), 
+                                        rsp_protocol->m_err_code, rsp_protocol->m_err_info.c_str());
+                                ctrller->SetError(rsp_protocol->m_err_code, std::move(rsp_protocol->m_err_info));
+                                Callback(ctrller, closure);
+                                return;
+                            }
+
+                            INFOLOG("RpcChannel::CallMethod : %s call rpc method [%s], get rpc response success.", 
+                                rsp_protocol->m_req_id.c_str(), rsp_protocol->m_method_name.c_str());
+
+                            if (!ctrller->IsCanceled() && closure != nullptr) {
+                                closure->Run();
+                            }
+                            
+                            Callback(ctrller, closure);
+                            return;
+                        }
+                    );
+                }
+            );
+        }
+    );
 }
 
 
@@ -206,6 +216,7 @@ inline void RpcChannel::Callback(RpcController* controller, RpcClosure* closure)
 }
 
 
+// To find rpc server
 NetAddr::s_ptr RpcChannel::FindAddr(const std::string& str) {
     if (IPNetAddr::CheckValid(str)) {
         return std::make_shared<IPNetAddr>(str);
@@ -220,6 +231,11 @@ NetAddr::s_ptr RpcChannel::FindAddr(const std::string& str) {
 
     INFOLOG("RpcChannel::FindAddr : can`t find stub [%s] addr.", str.c_str());
     return nullptr;
+}
+
+
+TcpClient* RpcChannel::getTcpClient() {
+    return m_client.get();
 }
 
 
@@ -238,10 +254,6 @@ NetAddr::s_ptr RpcChannel::FindAddr(const std::string& str) {
 // google::protobuf::Closure* RpcChannel::getClosure() {
 //     return m_closure.get();
 // }
-
-TcpClient* RpcChannel::getTcpClient() {
-    return m_client.get();
-}
 
 // TimerEvent::s_ptr RpcChannel::getTimerEvent() {
 //     return m_timer_event;
