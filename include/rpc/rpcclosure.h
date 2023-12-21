@@ -35,24 +35,24 @@ public:
             if (m_cb != nullptr) {
                 m_cb();
             }
-            if (m_rpc_interface) {
-                m_rpc_interface.reset();
-            }
+            // if (m_rpc_interface) {
+            //     m_rpc_interface.reset();
+            // }
         } catch (RayrpcException& e) {
             ERRLOG("RpcClosure exception: RayrpcException {}, deal with RayrpcException.handle().", e.what());
             e.handle();
-            if (m_rpc_interface) {
-                m_rpc_interface->setError(e.getErrorCode(), e.getErrorInfo());
-                m_rpc_interface.reset();
-            }
+            // if (m_rpc_interface) {
+            //     m_rpc_interface->setError(e.getErrorCode(), e.getErrorInfo());
+            //     m_rpc_interface.reset();
+            // }
         } catch (std::exception& e) {
             ERRLOG("RpcClosure exception: std::exception {}.", e.what());
-            m_rpc_interface->setError(-1, e.what());
-            m_rpc_interface.reset();
+            // m_rpc_interface->setError(-1, e.what());
+            // m_rpc_interface.reset();
         } catch (...) {
             ERRLOG("RpcClosure exception: unknown exception.");
-            m_rpc_interface->setError(-1, "unknown exception");
-            m_rpc_interface.reset();
+            // m_rpc_interface->setError(-1, "unknown exception");
+            // m_rpc_interface.reset();
         }
     }
 

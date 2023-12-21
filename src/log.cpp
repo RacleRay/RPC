@@ -24,9 +24,9 @@ std::map<rayrpc::LogLevel, std::string> loglevel_to_string = {
 
 std::map<std::string, rayrpc::LogLevel> string_to_loglevel = {
     {"Unknown", rayrpc::LogLevel::Unknown},
-    {"Debug", rayrpc::LogLevel::Debug},
-    {"Info", rayrpc::LogLevel::Info},
-    {"Error", rayrpc::LogLevel::Error}
+    {"DEBUG", rayrpc::LogLevel::Debug},
+    {"INFO", rayrpc::LogLevel::Info},
+    {"ERROR", rayrpc::LogLevel::Error}
 };
 
 

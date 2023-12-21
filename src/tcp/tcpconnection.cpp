@@ -324,5 +324,4 @@ int TcpConnection::getFd() const noexcept {
     return m_fd;
 }
 
-
 }  // namespace rayrpc
