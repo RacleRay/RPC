@@ -67,3 +67,4 @@ palette.map
 
 # public/index.html for httpd
 public/
+compile_commands.json
