@@ -9,3 +9,7 @@ foreach(v ${all_tests})
     add_executable(${target_name} ${v} ${SRC_LIST} ${PROTOBUF_LIST})
     target_link_libraries(${target_name} PRIVATE /usr/local/tinyxml/libtinyxml.a /usr/local/lib/libprotobuf.a)
 endforeach()
+
+
+add_executable(coroutine test_coroutine.c ../src/coroutine/coroutine.c)
+
