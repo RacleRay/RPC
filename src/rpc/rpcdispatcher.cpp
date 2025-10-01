@@ -120,7 +120,7 @@ void RpcDispatcher::dispatch(const AbstractProtocol::s_ptr& request, const Abstr
 }   
 
 void RpcDispatcher::registerService(service_s_ptr service) {
-    std::string service_name = service->GetDescriptor()->full_name();
+    std::string service_name(service->GetDescriptor()->full_name());
     m_service_map[service_name] = std::move(service);
 }
 

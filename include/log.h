@@ -75,6 +75,10 @@ enum class LogType { Console = 0, File = 1 };
 // functions
 template<typename... Args>
 std::string formatString(const char *str, Args &&...args) {
+    if (sizeof...(args) == 0) {
+        return std::string(str);
+    }
+
     int size = snprintf(nullptr, 0, str, args...);
 
     std::string result;
