@@ -6,6 +6,16 @@ set(CMAKE_C_STANDARD 11)
 
 project(my_project_name VERSION 0.0.1 LANGUAGES C CXX)
 
+# Find Protocol Buffers
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(PROTOBUF REQUIRED protobuf)
+
+# Find protoc executable
+find_program(PROTOC_EXECUTABLE protoc)
+if(NOT PROTOC_EXECUTABLE)
+    message(FATAL_ERROR "protoc not found")
+endif()
+
 
 if (NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
@@ -13,7 +23,7 @@ if (NOT CMAKE_BUILD_TYPE)
 endif()
 
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-	add_compile_definitions(__MY_DEBUG__)
+add_compile_definitions(__MY_DEBUG__)
 endif()
 
 # =======================================================
@@ -37,6 +47,7 @@ message(STATUS "[INFO] Found ${header_dir_list_count} header directories.")
 
 # include_directories(${PROJECT_SOURCE_DIR}/include/)
 include_directories(${header_dir_list})
+include_directories(${PROTOBUF_INCLUDE_DIRS})
 
 
 # 设置要遍历的文件夹路径

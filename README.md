@@ -2,8 +2,8 @@
 
 > 依赖环境：
 >
-> - protobuf
-> - tinyxml
+> - protobuf - 32.1 (re protoc protofiles, if changing proto version)
+> - tinyxml - 2.6.2
 
 ### RPC
 
